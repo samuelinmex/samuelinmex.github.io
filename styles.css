@@ -2856,3 +2856,226 @@ html[data-theme="paper"] .universe-stage .hero-status-chip {
   }
   .hero-stage-brand { transform: translateX(-50%) !important; }
 }
+
+
+/* =========================================================
+   V23 · Impact carousel — mobile-first compact presentation
+   ========================================================= */
+.impact-control-center { min-width: 0; }
+.impact-mobile-status { display: none; }
+
+/* At the one-column breakpoint the active card owns the natural height.
+   Hidden slides leave layout entirely, eliminating the oversized blank zone. */
+@media (max-width: 820px) {
+  .impact-stage {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: hidden;
+  }
+
+  .impact-slide,
+  .impact-slide.is-active {
+    min-height: 0;
+  }
+
+  .impact-slide {
+    display: none;
+    position: relative;
+    inset: auto;
+    width: 100%;
+    padding: 24px;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    align-items: initial;
+    align-content: initial;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+
+  .impact-slide.is-active {
+    display: grid;
+    animation: impactMobileCardIn .42s cubic-bezier(.2,.8,.2,1) both;
+  }
+
+  .impact-visual {
+    min-height: 178px;
+    border-radius: 22px;
+    box-shadow: 0 16px 44px rgba(0,0,0,.16), inset 0 0 34px rgba(37,99,235,.035);
+  }
+
+  .impact-visual::before { inset: 10% 18%; }
+  .impact-visual::after { inset: 23% 31%; }
+  .impact-orbit-a { width: 154px; height: 154px; }
+  .impact-orbit-b { width: 102px; height: 102px; }
+  .impact-index { top: 14px; left: 16px; }
+
+  .impact-metric {
+    font-size: clamp(4.2rem, 15vw, 5.8rem);
+    line-height: .95;
+  }
+  .impact-metric-wide {
+    max-width: 90%;
+    font-size: clamp(2.85rem, 10.8vw, 4rem);
+    line-height: .92;
+    letter-spacing: -.055em;
+  }
+  .impact-metric-support {
+    font-size: clamp(3.25rem, 12.5vw, 4.5rem);
+  }
+  .impact-metric-vault {
+    font-size: clamp(3.25rem, 12vw, 4.4rem);
+  }
+  .impact-metric-duration {
+    max-width: 86%;
+    font-size: clamp(4rem, 15vw, 5.25rem);
+    padding: .12em .30em .16em !important;
+  }
+
+  .impact-copy { padding: 2px 2px 4px; }
+  .impact-kicker {
+    margin-bottom: 10px;
+    font-size: .68rem;
+    line-height: 1.25;
+  }
+  .impact-copy h3 {
+    max-width: 15ch;
+    font-size: clamp(2rem, 7.2vw, 2.8rem);
+    line-height: 1.02;
+    letter-spacing: -.045em;
+    text-wrap: pretty;
+  }
+  .impact-copy p {
+    margin-top: 14px;
+    max-width: 36rem;
+    font-size: .98rem;
+    line-height: 1.58;
+    text-wrap: pretty;
+  }
+  .impact-tags {
+    gap: 7px;
+    margin-top: 18px;
+  }
+  .impact-tags span {
+    padding: 6px 9px;
+    font-size: .69rem;
+  }
+
+  .impact-controls { margin-top: 12px; }
+  .impact-progress { margin-top: 11px; }
+}
+
+/* Phone controls: a readable current-item pill replaces the clipped horizontal
+   strip. Swipe, arrows and keyboard navigation continue to work. */
+@media (max-width: 680px) {
+  .impact-carousel {
+    padding: 10px;
+    border-radius: 24px;
+  }
+  .impact-stage { border-radius: 20px; }
+  .impact-slide { padding: 16px; gap: 16px; }
+  .impact-visual { min-height: 156px; border-radius: 18px; }
+  .impact-visual::before { inset: 8% 15%; }
+  .impact-visual::after { inset: 22% 29%; }
+  .impact-orbit-a { width: 138px; height: 138px; }
+  .impact-orbit-b { width: 92px; height: 92px; }
+
+  .impact-metric-wide {
+    max-width: 86%;
+    font-size: clamp(2.65rem, 13vw, 3.5rem);
+  }
+  .impact-metric-support {
+    max-width: 92%;
+    font-size: clamp(2.9rem, 14vw, 3.85rem);
+  }
+  .impact-metric-vault {
+    max-width: 92%;
+    font-size: clamp(2.85rem, 13.5vw, 3.75rem);
+  }
+  .impact-metric-duration {
+    max-width: 84%;
+    font-size: clamp(3.8rem, 18vw, 4.8rem);
+  }
+
+  .impact-copy h3 {
+    max-width: 13ch;
+    font-size: clamp(1.9rem, 8.6vw, 2.45rem);
+  }
+  .impact-copy p {
+    font-size: .94rem;
+    line-height: 1.54;
+  }
+  .impact-tags { margin-top: 16px; }
+
+  .impact-controls {
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    gap: 9px;
+    align-items: stretch;
+    margin-top: 10px;
+  }
+  .impact-arrow {
+    width: 44px;
+    height: 44px;
+    align-self: center;
+  }
+  .impact-pagination { display: none; }
+  .impact-mobile-status {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 8px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(244,246,248,.10);
+    background: rgba(244,246,248,.035);
+    color: var(--text);
+    overflow: hidden;
+  }
+  .impact-mobile-status span {
+    flex: 0 0 auto;
+    color: var(--accent-soft);
+    font-size: .68rem;
+    font-weight: 950;
+    letter-spacing: .09em;
+  }
+  .impact-mobile-status strong {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: .78rem;
+    font-weight: 850;
+  }
+  .impact-progress { margin-inline: 53px; }
+
+  html[data-theme="paper"] .impact-mobile-status {
+    background: rgba(255,255,255,.76);
+    border-color: rgba(23,32,51,.12);
+    box-shadow: 0 10px 24px rgba(23,32,51,.05);
+  }
+  html[data-theme="paper"] .impact-mobile-status strong { color: #172033; }
+  html[data-theme="paper"] .impact-mobile-status span { color: #1D4ED8; }
+}
+
+@media (max-width: 390px) {
+  .impact-slide { padding: 14px; }
+  .impact-visual { min-height: 148px; }
+  .impact-copy h3 { font-size: clamp(1.75rem, 8.8vw, 2.15rem); }
+  .impact-copy p { font-size: .91rem; }
+  .impact-tags span { padding: 5px 8px; font-size: .66rem; }
+  .impact-mobile-status { padding-inline: 10px; }
+  .impact-mobile-status strong { font-size: .74rem; }
+}
+
+@keyframes impactMobileCardIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .impact-slide.is-active { animation: none !important; }
+}

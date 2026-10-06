@@ -64,7 +64,7 @@
     'Credenciales': 'Credentials', 'Acceso seguro': 'Secure access', 'Administración': 'Administration',
     'MEJORA OPERATIVA': 'OPERATIONAL IMPROVEMENT', 'Primer lugar de producción': 'Top production performance',
     'Participación en una estación cuello de botella cuyo turno mantuvo el primer lugar en objetivos diarios durante seis meses.': 'Worked at a bottleneck station whose shift held first place in daily production targets for six months.',
-    'Producción': 'Production', 'Soporte': 'Support', 'Continuidad': 'Continuity', 'Embarques': 'Shipments', 'meses': 'months', 'Objetivos': 'Targets', 'Eficiencia': 'Efficiency', 'Liderazgo': 'Leadership',
+    'Producción': 'Production', 'Soporte': 'Support', 'Continuidad': 'Continuity', 'Embarques': 'Shipments', 'meses': 'months', 'Objetivos': 'Targets', 'Eficiencia': 'Efficiency', 'Liderazgo': 'Leadership', 'Activos TI': 'IT Assets', 'Trazabilidad': 'Traceability',
     'TIMELINE DE HABILIDADES': 'SKILLS TIMELINE',
     'Una ruta visual desde la operación industrial hasta la administración de infraestructura.': 'A visual journey from industrial operations to infrastructure administration.',
     'La línea se ilumina conforme recorres la experiencia, mostrando cómo cada etapa construyó la siguiente.': 'The timeline lights up as you move through the experience, showing how each stage built the next.',
@@ -482,6 +482,8 @@
     const prev = carousel.querySelector('[data-impact-prev]');
     const next = carousel.querySelector('[data-impact-next]');
     const progress = document.getElementById('impactProgress');
+    const mobileIndex = document.getElementById('impactMobileIndex');
+    const mobileLabel = document.getElementById('impactMobileLabel');
     if (!slides.length) return;
 
     let current = 0;
@@ -492,11 +494,26 @@
     const delay = 7000;
     const stage = carousel.querySelector('.impact-stage');
 
+    const syncMobileStatus = () => {
+      const dot = dots[current];
+      if (!dot) return;
+      if (mobileIndex) mobileIndex.textContent = dot.querySelector('span')?.textContent?.trim() || String(current + 1).padStart(2, '0');
+      if (mobileLabel) mobileLabel.textContent = dot.querySelector('small')?.textContent?.trim() || '';
+    };
+
     const syncStageHeight = () => {
       if (!stage || !slides.length) return;
+
+      // Once the carousel becomes a one-column card (tablet/mobile), let the
+      // active slide define its natural height. This avoids the large empty
+      // area that appeared on phones when the tallest desktop slide was used.
+      if (window.matchMedia('(max-width: 820px)').matches) {
+        stage.style.removeProperty('height');
+        return;
+      }
+
       window.requestAnimationFrame(() => {
-        // Keep every impact item at the same height. Using the tallest slide avoids
-        // a visible jump when switching to content with a longer title (e.g. Vault).
+        // Desktop remains perfectly uniform between slides.
         const needed = slides.reduce((maxHeight, slide) => {
           const height = Math.max(slide.scrollHeight, slide.getBoundingClientRect().height);
           return Math.max(maxHeight, height);
@@ -547,6 +564,7 @@
       });
 
       current = nextIndex;
+      syncMobileStatus();
       syncStageHeight();
       schedule();
     };
@@ -612,7 +630,11 @@
     const handleLayoutChange = () => window.setTimeout(syncStageHeight, 40);
     window.addEventListener('resize', handleLayoutChange, { passive: true });
     window.addEventListener('portfolio:themechange', handleLayoutChange);
-    window.addEventListener('portfolio:languagechange', handleLayoutChange);
+    window.addEventListener('portfolio:languagechange', () => {
+      syncMobileStatus();
+      handleLayoutChange();
+    });
+    syncMobileStatus();
     syncStageHeight();
     if (document.fonts?.ready) document.fonts.ready.then(syncStageHeight).catch(() => {});
     schedule();

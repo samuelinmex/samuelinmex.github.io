@@ -310,12 +310,18 @@
 
         <div class="impact-controls">
           <button class="impact-arrow" type="button" data-impact-prev aria-label="Impacto anterior">←</button>
-          <div class="impact-pagination" role="tablist" aria-label="Seleccionar impacto">
-            <button class="impact-dot is-active" type="button" data-impact-go="0" role="tab" aria-selected="true"><span>01</span><small>Soporte</small></button>
-            <button class="impact-dot" type="button" data-impact-go="1" role="tab" aria-selected="false"><span>02</span><small>Liderazgo</small></button>
-            <button class="impact-dot" type="button" data-impact-go="2" role="tab" aria-selected="false"><span>03</span><small>Gestión TI</small></button>
-            <button class="impact-dot" type="button" data-impact-go="3" role="tab" aria-selected="false"><span>04</span><small>Vault</small></button>
-            <button class="impact-dot" type="button" data-impact-go="4" role="tab" aria-selected="false"><span>05</span><small>Producción</small></button>
+          <div class="impact-control-center">
+            <div class="impact-mobile-status" aria-live="polite" aria-atomic="true">
+              <span id="impactMobileIndex">01</span>
+              <strong id="impactMobileLabel">Soporte</strong>
+            </div>
+            <div class="impact-pagination" role="tablist" aria-label="Seleccionar impacto">
+              <button class="impact-dot is-active" type="button" data-impact-go="0" role="tab" aria-selected="true"><span>01</span><small>Soporte</small></button>
+              <button class="impact-dot" type="button" data-impact-go="1" role="tab" aria-selected="false"><span>02</span><small>Liderazgo</small></button>
+              <button class="impact-dot" type="button" data-impact-go="2" role="tab" aria-selected="false"><span>03</span><small>Gestión TI</small></button>
+              <button class="impact-dot" type="button" data-impact-go="3" role="tab" aria-selected="false"><span>04</span><small>Vault</small></button>
+              <button class="impact-dot" type="button" data-impact-go="4" role="tab" aria-selected="false"><span>05</span><small>Producción</small></button>
+            </div>
           </div>
           <button class="impact-arrow" type="button" data-impact-next aria-label="Siguiente impacto">→</button>
         </div>

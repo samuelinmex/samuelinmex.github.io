@@ -2868,7 +2868,6 @@ html[data-theme="paper"] .universe-stage .hero-status-chip {
    Hidden slides leave layout entirely, eliminating the oversized blank zone. */
 @media (max-width: 820px) {
   .impact-stage {
-    height: auto !important;
     min-height: 0 !important;
     overflow: hidden;
   }
@@ -2899,6 +2898,20 @@ html[data-theme="paper"] .universe-stage .hero-status-chip {
   .impact-slide.is-active {
     display: grid;
     animation: impactMobileCardIn .42s cubic-bezier(.2,.8,.2,1) both;
+  }
+
+  /* JS temporarily reveals every slide off-flow to measure the tallest
+     mobile card. The resulting stage height stays identical on every item. */
+  .impact-slide.is-measuring {
+    display: grid !important;
+    position: absolute !important;
+    inset: 0 0 auto 0 !important;
+    width: 100% !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    animation: none !important;
+    transform: none !important;
   }
 
   .impact-visual {

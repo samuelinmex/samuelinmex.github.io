@@ -504,16 +504,29 @@
     const syncStageHeight = () => {
       if (!stage || !slides.length) return;
 
-      // Once the carousel becomes a one-column card (tablet/mobile), let the
-      // active slide define its natural height. This avoids the large empty
-      // area that appeared on phones when the tallest desktop slide was used.
-      if (window.matchMedia('(max-width: 820px)').matches) {
-        stage.style.removeProperty('height');
-        return;
-      }
-
       window.requestAnimationFrame(() => {
-        // Desktop remains perfectly uniform between slides.
+        const isCompact = window.matchMedia('(max-width: 820px)').matches;
+
+        if (isCompact) {
+          // Measure every compact/mobile slide at the real carousel width, even
+          // though inactive slides are display:none. One maximum height is then
+          // applied to the stage so arrows/progress never jump between items.
+          stage.style.removeProperty('height');
+          slides.forEach(slide => slide.classList.add('is-measuring'));
+
+          window.requestAnimationFrame(() => {
+            const needed = slides.reduce((maxHeight, slide) => {
+              const height = Math.max(slide.scrollHeight, slide.getBoundingClientRect().height);
+              return Math.max(maxHeight, height);
+            }, 0);
+
+            slides.forEach(slide => slide.classList.remove('is-measuring'));
+            if (needed > 0) stage.style.height = `${Math.ceil(needed + 2)}px`;
+          });
+          return;
+        }
+
+        // Desktop also uses the tallest slide so the carousel remains uniform.
         const needed = slides.reduce((maxHeight, slide) => {
           const height = Math.max(slide.scrollHeight, slide.getBoundingClientRect().height);
           return Math.max(maxHeight, height);

@@ -1,1050 +1,443 @@
+'use strict';
+
 (() => {
-  'use strict';
-
-  const doc = document.documentElement;
-  const body = document.body;
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  const safely = (name, fn) => {
-    try {
-      fn();
-    } catch (error) {
-      console.error(`[Portfolio] ${name}:`, error);
+  const translations = {
+    es: {
+      pageTitle: 'Samuel Mancilla — Tecnología con criterio',
+      description: 'Samuel Mancilla, Ingeniero en Sistemas Computacionales. Soporte N1/N2, Microsoft 365, infraestructura TI, automatización y mejora de procesos en Cancún, México.',
+      ogDescription: 'Infraestructura TI, soporte y automatización con una mirada integral de la operación.',
+      skip: 'Saltar al contenido', home: 'Samuel Mancilla, inicio', navLabel: 'Navegación principal', mobileNavLabel: 'Navegación móvil',
+      navProfile: 'Perfil', navImpact: 'Impacto', navCareer: 'Trayectoria', navContact: 'Contacto', languageLabel: 'Idioma',
+      openPreferences: 'Abrir opciones de accesibilidad y apariencia', closePreferences: 'Cerrar opciones', openMenu: 'Abrir menú', closeMenu: 'Cerrar menú',
+      heroEyebrow: 'INGENIERO EN SISTEMAS COMPUTACIONALES', heroLineOne: 'Tecnología', heroLineTwo: 'con criterio.',
+      heroIntro: 'Detrás de cada sistema, hay personas.<br>Mi trabajo es hacer que ambos avancen.',
+      heroSpecialties: 'Infraestructura TI · Soporte N1/N2 · Automatización', explore: 'Explorar mi trabajo', download: 'Descargar CV',
+      portraitAlt: 'Retrato de Samuel Mancilla en blanco y negro', signatureRole: 'Tecnología & mejora continua', location: 'CANCÚN, MÉXICO', scroll: 'UNA MIRADA MÁS CERCANA',
+      disciplinesLabel: 'Áreas de experiencia', stripInfrastructure: 'Infraestructura', stripAutomation: 'Automatización', stripQuality: 'Mejora continua',
+      profileMarker: 'LA PERSONA DETRÁS DEL SISTEMA', profileTitle: 'Una mirada técnica.<br><em>Un sentido humano.</em>',
+      profileCaption: 'De Chiapas a Cancún.<br>Siempre, hacia lo que sigue.',
+      profilePortraitAlt: 'Samuel Mancilla, mirando hacia arriba a la derecha',
+      profileLead: 'Me apasiona entender cómo funcionan las cosas. Y encontrar una forma de hacerlas funcionar mejor.',
+      profileBody: 'Soy Samuel Mancilla, Ingeniero en Sistemas Computacionales. Mi trayectoria conecta la tecnología con la operación industrial: soporte a usuarios, administración de infraestructura y Microsoft 365, automatización y liderazgo en calidad.',
+      profileBodyTwo: 'Esa combinación me enseñó a mirar más allá del incidente. Entender el proceso, escuchar a las personas y documentar una solución que tenga sentido para quienes la usan.',
+      principleOne: 'Entender.', principleTwo: 'Resolver.', principleThree: 'Mejorar.',
+      statSupport: 'Soporte técnico<br>remoto y en sitio', people: ' personas', statTeam: 'Equipo liderado<br>en calidad · Tatung', months: ' meses', statProduction: 'Turno en primer lugar en metas<br>diarias de producción · TED',
+      impactMarker: 'CONTRIBUCIONES QUE CUENTAN', impactHint: 'SELECCIONA UN CASO PARA EXPLORARLO', impactTitle: 'El criterio se convierte<br><em>en resultados.</em>', caseTabsLabel: 'Logros profesionales',
+      caseItTitle: 'Orden en la operación TI', caseItTag: 'GLPI + OCS Inventory', caseAutoTitle: 'Menos tareas repetitivas', caseAutoTag: 'Automatización + datos', caseQualityTitle: 'Calidad desde el proceso', caseQualityTag: 'Liderazgo + mejora continua',
+      caseItHeading: 'De incidencias aisladas<br>a una operación trazable.',
+      caseItBody: 'Implementé y administré GLPI y OCS Inventory para centralizar el registro de incidencias, los activos TI y la trazabilidad de los equipos. Lo desplegué desde cero: instalación de Ubuntu Server, base de datos MySQL y DNS local en Windows Server 2019 para entrar con una URL interna.',
+      itMapLabel: 'Áreas centralizadas con GLPI y OCS Inventory', incidents: 'Incidencias', assets: 'Activos', traceability: 'Trazabilidad', contribution: 'CONTRIBUCIÓN',
+      caseItOutcome: 'Gestión centralizada de incidencias y activos, con seguimiento de equipos, acceso mediante una URL interna y apoyo a la continuidad operativa.',
+      caseAutoHeading: 'La tecnología también está<br>en los pequeños cambios.',
+      caseAutoBody: 'En el INE automaticé parcialmente la captura de movimientos extraordinarios y documentos testimoniales mediante una macro. Más adelante desarrollé herramientas internas para simplificar tareas operativas recurrentes.',
+      workflowInput: 'Información', workflowProcess: 'Organización<br>automática', workflowOutput: 'Registro',
+      caseAutoOutcome: 'Información organizada conforme al proceso del módulo y herramientas diseñadas para simplificar el trabajo diario.',
+      caseQualityHeading: 'La mejora se sostiene<br>con personas y método.',
+      caseQualityBody: 'En Tatung avancé de Inspector a Técnico y Supervisor de Calidad, liderando a 9 personas. En TED de México, nuestro turno se mantuvo en primer lugar en objetivos diarios de producción durante seis meses.',
+      qualityTeam: 'personas en el equipo', qualityMonths: 'meses en primer lugar',
+      caseQualityOutcome: 'Capacitación QA, estandarización de inspección y análisis de causa raíz. Un enfoque preventivo para cuidar la calidad desde el proceso.',
+      caseOffTitle: 'Préstamos sin perder datos', caseOffTag: 'VB.NET + modo sin conexión', caseHrTitle: 'Expedientes en orden', caseHrTag: 'Python + Excel', caseCtlTitle: 'Control a la vista', caseCtlTag: 'WordPress + Excel', caseWebTitle: 'Del boceto al navegador', caseWebTag: 'Desarrollo web + GitHub',
+      caseOffMeta: 'APLICACIÓN DE ESCRITORIO', caseOffHeading: 'Cada movimiento registrado,<br>incluso sin conexión.',
+      caseOffBody: 'Programé una aplicación para llevar el control detallado de préstamos y asignaciones de equipo. Completa de forma semiautomática los formatos de la empresa y, si la conexión falla, guarda los movimientos en el equipo para actualizar la base de datos cuando se recupera.',
+      offInput: 'Préstamo o<br>asignación', offCore: 'Guardado local<br>si falla la red', offOutput: 'Base de datos<br>actualizada',
+      caseOffOutcome: 'Control granular de préstamos y asignaciones, formatos llenados de forma semiautomática y movimientos pendientes protegidos ante fallos de conexión.',
+      tagOffline: 'Modo sin conexión', tagSync: 'Sincronización', tagForms: 'Formatos semiautomáticos',
+      caseHrMeta: 'RECURSOS HUMANOS', caseHrHeading: 'Cada documento,<br>en la carpeta de su persona.',
+      caseHrBody: 'Diseñé una aplicación para Recursos Humanos que lee archivos identificados con un ID, los compara contra una lista de registros en Excel y los asigna a una carpeta con el nombre de cada persona. Así se organiza la información de forma estructurada, con menos tiempo y menos errores.',
+      hrInput: 'Archivos<br>con ID', hrCore: 'Comparación<br>con Excel', hrOutput: 'Carpeta por<br>persona',
+      caseHrOutcome: 'Documentación del personal clasificada de forma estructurada, con menos tiempo de proceso y menos errores de organización.', tagFiles: 'Automatización de archivos',
+      caseCtlMeta: 'CONTROL OPERATIVO', caseCtlHeading: 'Disponibilidad y vencimientos,<br>siempre visibles.',
+      caseCtlBody: 'Con WordPress y un plugin de reservas organicé el préstamo de un equipo compartido para proyectos de diseño 3D: quien lo necesita consulta si está libre o reservado, sin preguntar. En Excel armé un dashboard para controlar licenciamientos, con alerta de las tres próximas a vencer, y el vencimiento de dominios públicos.',
+      ctlInput: 'Equipo<br>compartido', ctlCore: 'Reserva<br>en línea', ctlOutput: 'Estado visible<br>para todos',
+      caseCtlOutcome: 'Seguimiento claro del uso de un equipo compartido y vencimientos de licencias y dominios bajo control en un dashboard.',
+      tagBooking: 'Plugin de reservas', tagDashboard: 'Dashboard', tagRenewals: 'Licencias y dominios',
+      caseWebMeta: 'DESARROLLO WEB', caseWebHeading: 'Del boceto<br>al navegador.', caseWebBody: 'He desarrollado sitios web y proyectos técnicos, y los mantengo en GitHub. Estos son algunos de mis repositorios.',
+      reposLabel: 'Repositorios en GitHub', caseWebOutcome: 'Desarrollo web de principio a fin, desde la estructura hasta la puesta en producción.',
+      tagLocalDns: 'DNS local · Windows Server 2019',
+      tagDocumentation: 'Documentación', tagWhys: '5 Porqués', tagLeadership: 'Liderazgo QA', sourceNote: 'Contribuciones documentadas en mi trayectoria profesional.',
+      capMarker: 'MI CAJA DE HERRAMIENTAS', capTitle: 'Tecnología al servicio<br><em>de la operación.</em>', capIntro: 'Un conjunto de capacidades conectado por una misma intención: resolver con claridad.',
+      capOne: 'Sistemas & infraestructura', capOneBody: 'Administración de entornos empresariales, servidores y almacenamiento. Diagnóstico de conectividad y soporte a recursos corporativos.',
+      capTwo: 'Microsoft 365 & soporte', capTwoBody: 'Atención N1/N2 remota y en sitio. Gestión de usuarios, permisos y licencias; acompañamiento a usuarios y coordinación con proveedores.',
+      capThree: 'Datos & automatización', capThreeBody: 'Herramientas internas en Python y Visual Basic .NET, dashboards en Excel, organización de información y desarrollo web: desde la estructura hasta la puesta en producción.',
+      capFour: 'Calidad & liderazgo', capFourBody: 'Experiencia en inspección, metrología, manufactura y formación de equipos. Métodos de análisis para entender la causa y prevenir recurrencias.',
+      advancedExcel: 'Excel avanzado', webDevelopment: 'Desarrollo web', metrology: 'Metrología', training: 'Capacitación',
+      careerMarker: 'EXPERIENCIA QUE CONECTA', careerTitle: 'Cada etapa,<br><em>una nueva perspectiva.</em>', careerIntro: 'Tecnología, calidad y operación.<br>Una trayectoria que suma perspectivas.',
+      careerNueveRole: 'Especialista en Soluciones TI', careerNueveType: 'TECNOLOGÍA', careerNueveDates: '02 NOV 2023 — 18 SEP 2026',
+      careerNueveBody: 'Soporte N1/N2, administración de Microsoft 365 y SharePoint/OneDrive, servidores y Synology NAS. Implementación de GLPI/OCS, automatizaciones internas, diagnóstico de redes y telefonía IP.',
+      careerTatungRole: 'Inspector · Técnico · Supervisor de Calidad', careerTatungType: 'LIDERAZGO & QA', careerTatungDates: '21 JUL 2021 — 11 AGO 2023',
+      careerTatungBody: 'Promoción de Inspector a Técnico y Supervisor. Liderazgo de un equipo de 9 personas, capacitación QA, análisis 8D y estandarización de inspección, desde Incoming hasta liberación para embarque.',
+      career2022Role: 'Ensamble SMT · Fibra óptica · Operación', career2022Type: 'MANUFACTURA',
+      careerCommscopeDates: 'ADC DE JUÁREZ (COMMSCOPE) · 06 JUN — 18 JUL 2022', careerCommscopeBody: 'Inspección, ensamble, empaque y certificación de calidad de productos de fibra óptica. Apoyo como auxiliar de supervisor y seguimiento de materiales.',
+      careerFoxconnDates: 'SCIENTIFIC ATLANTA DE MÉXICO (FOXCONN) · 19 JUL — 14 SEP 2022', careerFoxconnBody: 'Ensamble y operación SMT, inspección de soldadura, mantenimiento básico de equipo y control de disponibilidad de materiales.',
+      careerIndustryRole: 'Calidad · Ensamble · Mejora de procesos', careerIndustryType: 'INDUSTRIA',
+      careerFirstronicDates: 'IMS OPERACIONES (FIRSTRONIC) · 10 AGO 2020 — 08 JUL 2021', careerFirstronicBody: 'Inspector y Técnico de Control de Calidad en electrónica automotriz. Liberación de líneas, alertas de calidad, análisis de causa raíz y capacitación.',
+      careerTedDates: 'TED DE MÉXICO · 27 JUN 2019 — 14 AGO 2020', careerTedBody: 'Ensamble y soldadura de componentes automotrices. Turno reconocido por seis meses en primer lugar en objetivos diarios; colaboración con ingeniería en mejoras de operación.',
+      careerEciDates: 'ELECTRO COMPONENTES DE MÉXICO · 04 FEB — 23 MAY 2019', careerEciBody: 'Ensamble de arneses, apoyo como auxiliar de supervisor e inspección de calidad de producto para embarque.',
+      careerIneRole: 'Captura de datos · Atención ciudadana · Soporte TI', careerIneType: 'SERVICIO & DATOS', careerIneDates: '03 MAR 2015 — 02 ENE 2019',
+      careerIneBody: 'Captura y control documental, atención a usuarios y automatización parcial con macros. Instalación de aplicaciones, mantenimiento y configuración de impresoras, escáneres y pads de firma.',
+      educationLabel: 'FORMACIÓN', degree: 'Ingeniería en Sistemas Computacionales', completeCv: 'Descargar CV completo',
+      learningNote: 'Sigo aprendiendo. Linux, seguridad de la información, virtualización, bases de datos y desarrollo web forman parte de mi formación continua.',
+      contactMarker: 'LA SIGUIENTE CONVERSACIÓN', contactTitle: 'Los buenos proyectos<br><em>empiezan hablando.</em>', contactIntro: '¿Tu equipo necesita soporte, infraestructura o una mirada fresca a sus procesos? Hablemos de lo que podemos construir.',
+      contactCvLabel: 'CURRÍCULUM', contactCvText: 'Mi experiencia, en detalle', footerLocation: 'Cancún, Quintana Roo · México', backToTop: 'Volver al inicio',
+      preferencesEyebrow: 'A TU MANERA', preferencesTitle: 'Accesibilidad y apariencia', themeLegend: 'Elige un tema', themeGraphite: 'Grafito', themeLight: 'Claro', themeContrast: 'Alto contraste',
+      reduceMotion: 'Reducir movimiento', reduceMotionHelp: 'Desactiva animaciones y desplazamiento suave.', cursorLabel: 'Halo del cursor', cursorHelp: 'Visible con ratón, también en alto contraste.',
+      textSize: 'Tamaño del texto', textSizeHelp: 'Ajusta la lectura a tu comodidad.', textNormal: 'Normal', textLarge: 'Grande', textLarger: 'Más grande',
+      savedLocally: 'Tus preferencias se recuerdan en este navegador.', resetPreferences: 'Restablecer preferencias', preferencesReset: 'Preferencias restablecidas.', languageChanged: 'Idioma cambiado a español.'
+    },
+    en: {
+      pageTitle: 'Samuel Mancilla — Technology with purpose',
+      description: 'Samuel Mancilla, Computer Systems Engineer. L1/L2 support, Microsoft 365, IT infrastructure, automation and process improvement in Cancún, Mexico.',
+      ogDescription: 'IT infrastructure, support and automation informed by hands-on operational experience.',
+      skip: 'Skip to content', home: 'Samuel Mancilla, home', navLabel: 'Main navigation', mobileNavLabel: 'Mobile navigation',
+      navProfile: 'Profile', navImpact: 'Impact', navCareer: 'Experience', navContact: 'Contact', languageLabel: 'Language',
+      openPreferences: 'Open accessibility and appearance settings', closePreferences: 'Close settings', openMenu: 'Open menu', closeMenu: 'Close menu',
+      heroEyebrow: 'COMPUTER SYSTEMS ENGINEER', heroLineOne: 'Technology', heroLineTwo: 'with purpose.',
+      heroIntro: 'Behind every system, there are people.<br>My work helps both move forward.',
+      heroSpecialties: 'IT infrastructure · L1/L2 support · Automation', explore: 'Explore my work', download: 'Download résumé',
+      portraitAlt: 'Black-and-white portrait of Samuel Mancilla', signatureRole: 'Technology & continuous improvement', location: 'CANCÚN, MEXICO', scroll: 'TAKE A CLOSER LOOK',
+      disciplinesLabel: 'Areas of expertise', stripInfrastructure: 'Infrastructure', stripAutomation: 'Automation', stripQuality: 'Continuous improvement',
+      profileMarker: 'THE PERSON BEHIND THE SYSTEM', profileTitle: 'A technical perspective.<br><em>A human approach.</em>',
+      profileCaption: 'From Chiapas to Cancún.<br>Always moving forward.',
+      profilePortraitAlt: 'Samuel Mancilla, looking up and to the right',
+      profileLead: 'I am driven to understand how things work. And to find a way to make them work better.',
+      profileBody: 'I am Samuel Mancilla, a Computer Systems Engineer. My experience connects technology with industrial operations: user support, infrastructure and Microsoft 365 administration, automation and quality leadership.',
+      profileBodyTwo: 'That combination taught me to look beyond the incident. To understand the process, listen to people and document a solution that makes sense to those who use it.',
+      principleOne: 'Understand.', principleTwo: 'Resolve.', principleThree: 'Improve.',
+      statSupport: 'Technical support<br>remote and on-site', people: ' people', statTeam: 'Quality team<br>led at Tatung', months: ' months', statProduction: 'Shift ranked first in daily<br>production targets · TED',
+      impactMarker: 'CONTRIBUTIONS THAT MATTER', impactHint: 'SELECT A CASE TO EXPLORE', impactTitle: 'Sound judgment.<br><em>Practical results.</em>', caseTabsLabel: 'Professional achievements',
+      caseItTitle: 'Bringing order to IT', caseItTag: 'GLPI + OCS Inventory', caseAutoTitle: 'Fewer repetitive tasks', caseAutoTag: 'Automation + data', caseQualityTitle: 'Quality from the start', caseQualityTag: 'Leadership + improvement',
+      caseItHeading: 'From isolated incidents<br>to traceable operations.',
+      caseItBody: 'I implemented and administered GLPI and OCS Inventory to centralize incident records, IT assets and equipment traceability. I deployed it from scratch: Ubuntu Server installation, a MySQL database and local DNS on Windows Server 2019 so it can be reached through an internal URL.',
+      itMapLabel: 'Areas centralized with GLPI and OCS Inventory', incidents: 'Incidents', assets: 'Assets', traceability: 'Traceability', contribution: 'CONTRIBUTION',
+      caseItOutcome: 'Centralized incident and asset management, with equipment tracking, access through an internal URL and support for operational continuity.',
+      caseAutoHeading: 'Technology also lives<br>in the small changes.',
+      caseAutoBody: 'At INE, I partially automated data entry for exceptional transactions and testimonial documents using a macro. Later, I developed internal tools to simplify recurring operational tasks.',
+      workflowInput: 'Information', workflowProcess: 'Automated<br>organization', workflowOutput: 'Records',
+      caseAutoOutcome: 'Information organized according to the office workflow, and tools designed to simplify day-to-day work.',
+      caseQualityHeading: 'Lasting improvement takes<br>people and method.',
+      caseQualityBody: 'At Tatung, I progressed from Quality Inspector to Technician and Supervisor, leading 9 people. At TED de México, our shift ranked first in daily production targets for six months.',
+      qualityTeam: 'people on the team', qualityMonths: 'months ranked first',
+      caseQualityOutcome: 'QA training, standardized inspections and root-cause analysis. A preventive approach to quality throughout the process.',
+      caseOffTitle: 'Loans without lost data', caseOffTag: 'VB.NET + offline mode', caseHrTitle: 'Records in order', caseHrTag: 'Python + Excel', caseCtlTitle: 'Control at a glance', caseCtlTag: 'WordPress + Excel', caseWebTitle: 'From sketch to browser', caseWebTag: 'Web development + GitHub',
+      caseOffMeta: 'DESKTOP APPLICATION', caseOffHeading: 'Every movement recorded,<br>even offline.',
+      caseOffBody: 'I built an application to track equipment loans and assignments in detail. It semi-automatically completes the company’s forms and, if the connection fails, stores movements on the device so the database can be updated once the connection returns.',
+      offInput: 'Loan or<br>assignment', offCore: 'Saved locally<br>if the network fails', offOutput: 'Database<br>updated',
+      caseOffOutcome: 'Granular control of loans and assignments, semi-automatically completed forms and pending movements protected against connection failures.',
+      tagOffline: 'Offline mode', tagSync: 'Synchronization', tagForms: 'Semi-automated forms',
+      caseHrMeta: 'HUMAN RESOURCES', caseHrHeading: 'Each document,<br>in its owner’s folder.',
+      caseHrBody: 'I designed an application for Human Resources that reads files identified by an ID, matches them against a list of records in Excel and assigns them to a folder named after each person. Information is organized in a structured way, in less time and with fewer errors.',
+      hrInput: 'Files<br>with ID', hrCore: 'Matching<br>with Excel', hrOutput: 'Folder per<br>person',
+      caseHrOutcome: 'Personnel documentation classified in a structured way, with less processing time and fewer filing errors.', tagFiles: 'File automation',
+      caseCtlMeta: 'OPERATIONAL CONTROL', caseCtlHeading: 'Availability and renewals,<br>always visible.',
+      caseCtlBody: 'With WordPress and a booking plugin, I organized loans of a shared workstation for 3D design projects: anyone who needs it can see whether it is free or reserved, without having to ask. In Excel, I built a dashboard to manage software licensing, alerting on the three closest to expiring, along with public domain expirations.',
+      ctlInput: 'Shared<br>equipment', ctlCore: 'Online<br>booking', ctlOutput: 'Status visible<br>to everyone',
+      caseCtlOutcome: 'Clear tracking of a shared workstation and license and domain expirations under control in one dashboard.',
+      tagBooking: 'Booking plugin', tagDashboard: 'Dashboard', tagRenewals: 'Licenses & domains',
+      caseWebMeta: 'WEB DEVELOPMENT', caseWebHeading: 'From sketch<br>to browser.', caseWebBody: 'I have built websites and technical projects, and I maintain them on GitHub. Here are some of my repositories.',
+      reposLabel: 'GitHub repositories', caseWebOutcome: 'End-to-end web development, from structure through production launch.',
+      tagLocalDns: 'Local DNS · Windows Server 2019',
+      tagDocumentation: 'Documentation', tagWhys: '5 Whys', tagLeadership: 'QA leadership', sourceNote: 'Contributions documented in my professional experience.',
+      capMarker: 'MY TOOLKIT', capTitle: 'Technology that serves<br><em>the operation.</em>', capIntro: 'A connected set of capabilities with one shared purpose: solving problems with clarity.',
+      capOne: 'Systems & infrastructure', capOneBody: 'Administration of enterprise environments, servers and storage. Connectivity troubleshooting and support for corporate resources.',
+      capTwo: 'Microsoft 365 & support', capTwoBody: 'Remote and on-site L1/L2 support. User, permission and license management; user assistance and vendor coordination.',
+      capThree: 'Data & automation', capThreeBody: 'Internal tools in Python and Visual Basic .NET, Excel dashboards, information management and web development, from structure through production launch.',
+      capFour: 'Quality & leadership', capFourBody: 'Experience in inspection, metrology, manufacturing and team training. Analytical methods to understand causes and prevent recurrence.',
+      advancedExcel: 'Advanced Excel', webDevelopment: 'Web development', metrology: 'Metrology', training: 'Training',
+      careerMarker: 'EXPERIENCE THAT CONNECTS', careerTitle: 'Every chapter,<br><em>a new perspective.</em>', careerIntro: 'Technology, quality and operations.<br>Experience that brings perspectives together.',
+      careerNueveRole: 'IT Solutions Specialist', careerNueveType: 'TECHNOLOGY', careerNueveDates: '02 NOV 2023 — 18 SEP 2026',
+      careerNueveBody: 'L1/L2 support, Microsoft 365 and SharePoint/OneDrive administration, servers and Synology NAS. GLPI/OCS implementation, internal automation, network troubleshooting and IP telephony.',
+      careerTatungRole: 'Quality Inspector · Technician · Supervisor', careerTatungType: 'LEADERSHIP & QA', careerTatungDates: '21 JUL 2021 — 11 AUG 2023',
+      careerTatungBody: 'Promoted from Inspector to Technician and Supervisor. Led a team of 9, delivered QA training, performed 8D analysis and standardized inspections from Incoming to shipment release.',
+      career2022Role: 'SMT assembly · Fiber optics · Operations', career2022Type: 'MANUFACTURING',
+      careerCommscopeDates: 'ADC DE JUÁREZ (COMMSCOPE) · 06 JUN — 18 JUL 2022', careerCommscopeBody: 'Inspection, assembly, packaging and quality certification of fiber-optic products. Assistant-supervisor duties and material tracking.',
+      careerFoxconnDates: 'SCIENTIFIC ATLANTA DE MÉXICO (FOXCONN) · 19 JUL — 14 SEP 2022', careerFoxconnBody: 'Assembly and SMT operation, solder inspection, basic equipment maintenance and material-availability monitoring.',
+      careerIndustryRole: 'Quality · Assembly · Process improvement', careerIndustryType: 'INDUSTRY',
+      careerFirstronicDates: 'IMS OPERACIONES (FIRSTRONIC) · 10 AUG 2020 — 08 JUL 2021', careerFirstronicBody: 'Quality Inspector and Technician in automotive electronics. Production-line release, quality alerts, root-cause analysis and training.',
+      careerTedDates: 'TED DE MÉXICO · 27 JUN 2019 — 14 AUG 2020', careerTedBody: 'Automotive component assembly and soldering. Shift recognized for six months ranked first in daily targets; collaboration with engineering on operational improvements.',
+      careerEciDates: 'ELECTRO COMPONENTES DE MÉXICO · 04 FEB — 23 MAY 2019', careerEciBody: 'Wiring-harness assembly, assistant-supervisor support and quality inspection of products for shipment.',
+      careerIneRole: 'Data entry · Citizen services · IT support', careerIneType: 'SERVICE & DATA', careerIneDates: '03 MAR 2015 — 02 JAN 2019',
+      careerIneBody: 'Data entry and document control, user services and partial automation with macros. Application installation, maintenance, and configuration of printers, scanners and signature pads.',
+      educationLabel: 'EDUCATION', degree: 'Computer Systems Engineering', completeCv: 'Download full résumé',
+      learningNote: 'I keep learning. Linux, information security, virtualization, databases and web development are part of my ongoing professional development.',
+      contactMarker: 'THE NEXT CONVERSATION', contactTitle: 'Good projects start<br><em>with a conversation.</em>', contactIntro: 'Does your team need support, infrastructure or a fresh perspective on its processes? Let’s talk about what we can build.',
+      contactCvLabel: 'RÉSUMÉ', contactCvText: 'My experience, in detail', footerLocation: 'Cancún, Quintana Roo · Mexico', backToTop: 'Back to top',
+      preferencesEyebrow: 'YOUR WAY', preferencesTitle: 'Accessibility & appearance', themeLegend: 'Choose a theme', themeGraphite: 'Graphite', themeLight: 'Light', themeContrast: 'High contrast',
+      reduceMotion: 'Reduce motion', reduceMotionHelp: 'Turn off animations and smooth scrolling.', cursorLabel: 'Cursor halo', cursorHelp: 'Visible with a mouse, including high contrast.',
+      textSize: 'Text size', textSizeHelp: 'Adjust the reading experience to suit you.', textNormal: 'Normal', textLarge: 'Large', textLarger: 'Larger',
+      savedLocally: 'Your preferences are remembered in this browser.', resetPreferences: 'Reset preferences', preferencesReset: 'Preferences reset.', languageChanged: 'Language changed to English.'
     }
   };
 
-  /* ---------------------------------------------------------
-     Locale / theme state shared by every interaction module
-     --------------------------------------------------------- */
-  const storageGet = key => { try { return window.localStorage?.getItem(key) || null; } catch (_) { return null; } };
-  const storageSet = (key, value) => { try { window.localStorage?.setItem(key, value); } catch (_) { /* persistence is optional */ } };
-  let currentLanguage = storageGet('sm-language') === 'en' ? 'en' : 'es';
-  const originalTextNodes = new WeakMap();
-  const originalAriaLabels = new WeakMap();
-
-  const EN_TEXT = {
-    'Saltar al contenido': 'Skip to content',
-    'Ingeniero en Sistemas': 'Systems Engineer',
-    'Perfil': 'Profile', 'Impacto': 'Impact', 'Habilidades': 'Skills', 'Experiencia': 'Experience',
-    'Formación': 'Education', 'Repositorios': 'Repositories', 'Contacto': 'Contact',
-    'Disponible para nuevas oportunidades': 'Open to new opportunities',
-    'INFRAESTRUCTURA TI · SOPORTE · REDES · AUTOMATIZACIÓN': 'IT INFRASTRUCTURE · SUPPORT · NETWORKING · AUTOMATION',
-    'Tecnología que': 'Technology that',
-    'mantiene la operación en movimiento.': 'keeps operations moving.',
-    'Ingeniero en Sistemas Computacionales con experiencia resolviendo incidencias, administrando plataformas, servidores y redes, y conectando la tecnología con procesos de calidad, continuidad operativa y mejora continua.': 'Computer Systems Engineer experienced in resolving incidents, administering platforms, servers and networks, and connecting technology with quality, operational continuity and continuous improvement.',
-    'Especializado en': 'Specialized in',
-    'Infraestructura TI': 'IT Infrastructure',
-    'Ver CV completo': 'View full résumé', 'Descargar CV': 'Download résumé', 'Ver trayectoria': 'View career path',
-    '10+ años': '10+ years', 'experiencia laboral': 'professional experience', 'soporte técnico': 'technical support',
-    'visión integral': 'end-to-end perspective', 'Disponible para nuevas oportunidades': 'Open to new opportunities',
-    'Gestión TI': 'IT Management', 'Operación': 'Operations', 'Continuidad + Calidad': 'Continuity + Quality',
-    'Ingeniero en Sistemas Computacionales': 'Computer Systems Engineer',
-    'Inicializando render estelar...': 'Initializing stellar render...', 'Modo': 'Mode',
-    'Infraestructura & Soporte': 'Infrastructure & Support', 'Visual': 'Visual', 'Digitalización en 4 s': '4 s digital reveal',
-    'Enfoque': 'Focus', 'Resolución + Continuidad': 'Resolution + Continuity',
-    'PERFIL PROFESIONAL': 'PROFESSIONAL PROFILE',
-    'Un perfil técnico que entiende tanto el sistema como el proceso.': 'A technical profile that understands both systems and processes.',
-    'Mi experiencia combina soporte e infraestructura con calidad industrial, documentación, análisis de causa raíz y liderazgo operativo.': 'My experience combines IT support and infrastructure with industrial quality, documentation, root-cause analysis and operational leadership.',
-    'He trabajado desde la atención directa al usuario hasta la administración de servicios críticos: Microsoft 365, Windows y Linux, servidores, almacenamiento, redes, inventario TI y automatización.': 'My work ranges from direct user support to the administration of critical services: Microsoft 365, Windows and Linux, servers, storage, networks, IT inventory and automation.',
-    'También he desempeñado funciones de inspección, técnico y supervisor de calidad en manufactura, lo que fortaleció mi disciplina para documentar, contener riesgos, analizar causas y estandarizar soluciones.': 'I have also worked as a quality inspector, technician and supervisor in manufacturing, strengthening my discipline for documentation, risk containment, cause analysis and solution standardization.',
-    'Mi forma de trabajar es práctica: entender el problema, determinar su impacto, resolver con orden y dejar una solución que pueda repetirse, auditarse y mejorarse.': 'My approach is practical: understand the problem, determine its impact, resolve it methodically, and leave behind a solution that can be repeated, audited and improved.',
-    'Diagnóstico estructurado': 'Structured diagnostics', 'Priorizo impacto, causa y continuidad antes de ejecutar cambios.': 'I prioritize impact, cause and continuity before making changes.',
-    'Documentación útil': 'Useful documentation', 'Convierto soluciones técnicas en procedimientos claros y replicables.': 'I turn technical solutions into clear, repeatable procedures.',
-    'Enfoque operativo': 'Operational focus', 'La tecnología debe ayudar a que usuarios y procesos sigan funcionando.': 'Technology should help users and processes keep operating.',
-    'Mejora continua': 'Continuous improvement', 'Busco simplificar tareas, reducir fricción y prevenir recurrencias.': 'I look for ways to simplify tasks, reduce friction and prevent recurrence.',
-    'IMPACTO PROFESIONAL': 'PROFESSIONAL IMPACT', 'Hechos concretos que resumen cómo aporto valor.': 'Concrete outcomes that summarize how I create value.',
-    'SOPORTE & CONTINUIDAD': 'SUPPORT & CONTINUITY', 'Soporte técnico integral': 'End-to-end technical support',
-    'Atención remota y en sitio para hardware, software, conectividad, acceso a sistemas y recursos corporativos.': 'Remote and on-site support for hardware, software, connectivity, system access and corporate resources.',
-    'LIDERAZGO QA': 'QA LEADERSHIP', 'Personas lideradas': 'People led',
-    'Supervisión de un equipo de calidad controlando Incoming, proceso y liberación para embarque.': 'Led a quality team covering incoming inspection, production processes and shipment release.',
-    'GESTIÓN CENTRALIZADA': 'CENTRALIZED MANAGEMENT', 'Incidencias, activos e inventario': 'Incidents, assets and inventory',
-    'Implementación para centralizar incidencias, activos TI, inventario y trazabilidad de equipos.': 'Implemented a centralized approach for incidents, IT assets, inventory and equipment traceability.',
-    'SEGURIDAD OPERATIVA': 'OPERATIONAL SECURITY', 'Baúl de contraseñas empresarial': 'Enterprise password vault',
-    'Implementación de Vaultwarden para centralizar credenciales corporativas, mejorar el acceso seguro y fortalecer la administración de contraseñas del equipo.': 'Implemented Vaultwarden to centralize corporate credentials, improve secure access and strengthen team password management.',
-    'Credenciales': 'Credentials', 'Acceso seguro': 'Secure access', 'Administración': 'Administration',
-    'MEJORA OPERATIVA': 'OPERATIONAL IMPROVEMENT', 'Primer lugar de producción': 'Top production performance',
-    'Participación en una estación cuello de botella cuyo turno mantuvo el primer lugar en objetivos diarios durante seis meses.': 'Worked at a bottleneck station whose shift held first place in daily production targets for six months.',
-    'Producción': 'Production', 'Soporte': 'Support', 'Continuidad': 'Continuity', 'Embarques': 'Shipments', 'meses': 'months', 'Objetivos': 'Targets', 'Eficiencia': 'Efficiency', 'Liderazgo': 'Leadership', 'Activos TI': 'IT Assets', 'Trazabilidad': 'Traceability',
-    'TIMELINE DE HABILIDADES': 'SKILLS TIMELINE',
-    'Una ruta visual desde la operación industrial hasta la administración de infraestructura.': 'A visual journey from industrial operations to infrastructure administration.',
-    'La línea se ilumina conforme recorres la experiencia, mostrando cómo cada etapa construyó la siguiente.': 'The timeline lights up as you move through the experience, showing how each stage built the next.',
-    'ETAPA ACTIVA': 'ACTIVE STAGE', 'Base operativa': 'Operational foundation', 'Manufactura & Producción': 'Manufacturing & Production',
-    'SMT, ensamble, soldadura, fibra óptica, arneses automotrices, control de materiales, embarques y continuidad de línea.': 'SMT, assembly, soldering, fiber optics, automotive harnesses, material control, shipping and line continuity.',
-    'Fibra óptica': 'Fiber optics', 'Materiales': 'Materials', 'Control & precisión': 'Control & precision', 'Calidad & Metrología': 'Quality & Metrology',
-    'Incoming, inspección de proceso/final, Ishikawa, 5 Porqués, 8D, segregación de material y verificación de calibración.': 'Incoming, in-process/final inspection, Ishikawa, 5 Whys, 8D, material segregation and calibration verification.',
-    '5 Porqués': '5 Whys', 'Atención & resolución': 'Support & resolution', 'Soporte & Service Desk': 'Support & Service Desk',
-    'Soporte N1/N2, helpdesk, diagnóstico de hardware/software, mantenimiento preventivo/correctivo y atención remota/en sitio.': 'L1/L2 support, help desk, hardware/software diagnostics, preventive/corrective maintenance and remote/on-site service.',
-    'Usuarios': 'Users', 'Conectividad': 'Connectivity', 'Redes & Comunicaciones': 'Networking & Communications',
-    'DHCP, DNS, VLAN, SSH, firewall, switching, LAN/WAN, cableado estructurado y telefonía IP.': 'DHCP, DNS, VLAN, SSH, firewall, switching, LAN/WAN, structured cabling and IP telephony.',
-    'Sistemas & Plataformas': 'Systems & Platforms',
-    'Windows, Linux, Microsoft 365, Active Directory, Exchange Online, SharePoint, OneDrive, Hyper-V y Adobe Admin Console.': 'Windows, Linux, Microsoft 365, Active Directory, Exchange Online, SharePoint, OneDrive, Hyper-V and Adobe Admin Console.',
-    'Servidores & Almacenamiento': 'Servers & Storage',
-    'Windows Server, servidores Linux, Synology NAS, archivos, bases de datos, servicios web, Docker y recursos on-premise.': 'Windows Server, Linux servers, Synology NAS, file services, databases, web services, Docker and on-premises resources.',
-    'Datos & eficiencia': 'Data & efficiency', 'Automatización & Datos': 'Automation & Data',
-    'Power BI, Excel avanzado, SQL, MySQL/MariaDB, Visual Basic .NET, Java, macros y automatización de tareas operativas.': 'Power BI, advanced Excel, SQL, MySQL/MariaDB, Visual Basic .NET, Java, macros and operational task automation.',
-    'Excel avanzado': 'Advanced Excel', 'Gestión & seguridad': 'Management & security', 'Operación TI & Seguridad': 'IT Operations & Security',
-    'OCS Inventory, proveedores, documentación técnica, Bitdefender GravityZone, Vaultwarden, gestión de incidentes y capacitación.': 'OCS Inventory, vendors, technical documentation, Bitdefender GravityZone, Vaultwarden, incident management and training.',
-    'Proveedores': 'Vendors',
-    'STACK TÉCNICO': 'TECHNICAL STACK', 'Tecnologías y metodologías con las que he trabajado o me he formado.': 'Technologies and methodologies I have worked with or trained in.',
-    'Todo': 'All', 'Sistemas': 'Systems', 'Redes': 'Networks', 'Datos': 'Data', 'Calidad': 'Quality', 'Telefonía IP': 'IP Telephony', 'Metrología': 'Metrology', 'Capacitación QA': 'QA Training',
-    'TRAYECTORIA PROFESIONAL': 'PROFESSIONAL EXPERIENCE', 'Experiencia construida desde la operación hasta la administración de TI.': 'Experience built from hands-on operations through IT administration.',
-    'Toda la trayectoria': 'Full career', 'TI': 'IT', 'Manufactura': 'Manufacturing',
-    'Especialista en Soluciones TI / Ingeniero en Sistemas': 'IT Solutions Specialist / Systems Engineer',
-    'Soporte técnico N1/N2 remoto y en sitio para hardware, software, conectividad, Microsoft 365, SharePoint y OneDrive.': 'Remote and on-site L1/L2 support for hardware, software, connectivity, Microsoft 365, SharePoint and OneDrive.',
-    'Administración de usuarios, permisos, licencias, DNS, archivos, bases de datos, sistemas web y almacenamiento Synology NAS.': 'Administration of users, permissions, licenses, DNS, files, databases, web systems and Synology NAS storage.',
-    'Implementación y administración de GLPI y OCS Inventory para incidencias, activos y trazabilidad.': 'Implementation and administration of GLPI and OCS Inventory for incidents, assets and traceability.',
-    'Diagnóstico de DHCP, DNS, VLAN, SSH, LAN/WAN y telefonía IP Grandstream.': 'Diagnostics for DHCP, DNS, VLAN, SSH, LAN/WAN and Grandstream IP telephony.',
-    'Administración de herramientas como Vaultwarden, Bitdefender GravityZone y Adobe Admin Console.': 'Administration of tools such as Vaultwarden, Bitdefender GravityZone and Adobe Admin Console.',
-    'Coordinación con proveedores y desarrollo de herramientas internas y automatizaciones.': 'Vendor coordination and development of internal tools and automations.',
-    'Inspector / Técnico / Supervisor de Calidad': 'Quality Inspector / Technician / Supervisor',
-    'Evolución interna desde Inspector hasta Supervisor de Calidad.': 'Internal progression from Inspector to Quality Supervisor.',
-    'Inspección Incoming, análisis de causa raíz con Ishikawa, 5 Porqués y 8D, reportes para gerencia y control de calibración.': 'Incoming inspection, root-cause analysis with Ishikawa, 5 Whys and 8D, management reporting and calibration control.',
-    'Capacitación de inspectores QA y creación de manuales, diagramas de flujo y material visual.': 'Training of QA inspectors and creation of manuals, flowcharts and visual material.',
-    'Liderazgo de un equipo de 9 personas desde recepción y proceso hasta liberación para embarque.': 'Led a 9-person team from incoming inspection and production through shipment release.',
-    'Operador de Ensamble / Operador SMT': 'Assembly Operator / SMT Operator',
-    'Operación de maquinaria automática de colocación y soldadura de componentes electrónicos.': 'Operation of automated electronic component placement and soldering equipment.',
-    'Inspección visual, control de materiales, limpieza y mantenimiento básico de equipos SMT.': 'Visual inspection, material control, cleaning and basic SMT equipment maintenance.',
-    'Seguimiento a consumo y disponibilidad de material para prevenir paros de línea.': 'Monitored material consumption and availability to prevent line stoppages.',
-    'Operador de Inspección / Ensamble / Empaque · Auxiliar de Supervisor': 'Inspection / Assembly / Packaging Operator · Assistant Supervisor',
-    'Inspección y certificación de productos de fibra óptica monomodo y multimodo.': 'Inspection and certification of single-mode and multimode fiber-optic products.',
-    'Apoyo a supervisión mediante solicitudes de material, tickets de empaque, abastecimiento y devolución de producto defectuoso.': 'Supported supervision through material requests, packing tickets, replenishment and defective product returns.',
-    'Seguimiento operativo para evitar paros por falta de suministro.': 'Operational follow-up to prevent stoppages caused by supply shortages.',
-    'Inspector / Técnico de Control de Calidad': 'Quality Control Inspector / Technician',
-    'Promoción de Inspector a Técnico de Control de Calidad en industria automotriz.': 'Promoted from Inspector to Quality Control Technician in the automotive industry.',
-    'Liberación de líneas, seguimiento a defectos, segregación y alertas de calidad.': 'Line release, defect follow-up, segregation and quality alerts.',
-    'Análisis de causa raíz, reportes para gerencia, documentación de inspección y capacitación de personal QA.': 'Root-cause analysis, management reports, inspection documentation and QA staff training.',
-    'Capacitación a operadores en autoensamble, soldadura, reparación y manejo correcto de materiales.': 'Trained operators in automated assembly, soldering, repair and correct material handling.',
-    'Operador de Ensamble y Soldadura': 'Assembly and Soldering Operator',
-    'Ensamble, soldadura y reparación de componentes automotrices.': 'Assembly, soldering and repair of automotive components.',
-    'Participación en una estación cuello de botella cuyo turno mantuvo durante seis meses el primer lugar en cumplimiento diario.': 'Worked at a bottleneck station whose shift held first place in daily target attainment for six months.',
-    'Aporte de ideas de automatización y mejoras prácticas junto con personal de ingeniería.': 'Contributed automation ideas and practical improvements with engineering staff.',
-    'Capacitación de nuevo ingreso y apoyo al control de material para reducir acumulación y desperdicio.': 'Trained new hires and supported material control to reduce buildup and waste.',
-    'Operador de Ensamble / Auxiliar de Supervisor': 'Assembly Operator / Assistant Supervisor',
-    'Ensamble de arneses automotrices con apego a instrucciones y control de materiales.': 'Automotive harness assembly following work instructions and material controls.',
-    'Apoyo como auxiliar de supervisor gracias a facilidad con sistemas y captura de información.': 'Supported supervision duties due to strong systems and data-entry skills.',
-    'Responsabilidad sobre inspección de calidad para producto destinado a embarque.': 'Responsible for quality inspection of products intended for shipment.',
-    'Capturista de Datos / Atención Ciudadana / Soporte TI': 'Data Entry / Citizen Service / IT Support',
-    'Captura, clasificación y control de documentación para trámites ciudadanos.': 'Data entry, classification and document control for citizen services.',
-    'Automatización parcial de registros mediante una macro para organizar información.': 'Partially automated record entry through a macro that organized information.',
-    'Soporte a equipos del módulo: aplicaciones, mantenimiento preventivo, impresoras, escáneres y pads de firma.': 'Supported office equipment: applications, preventive maintenance, printers, scanners and signature pads.',
-    'CASOS DE APORTE': 'CONTRIBUTION CASES', 'No sólo herramientas: problemas reales, acciones concretas.': 'Not just tools: real problems, concrete actions.',
-    'GESTIÓN TI': 'IT MANAGEMENT', 'Centralización de incidencias y activos': 'Centralizing incidents and assets',
-    'Implementé y administré GLPI y OCS Inventory para concentrar el registro de incidencias, activos TI y trazabilidad de equipos.': 'Implemented and administered GLPI and OCS Inventory to centralize incident records, IT assets and equipment traceability.',
-    'Activos': 'Assets', 'AUTOMATIZACIÓN': 'AUTOMATION', 'Menos captura manual, más consistencia': 'Less manual entry, more consistency',
-    'En el INE automaticé parcialmente el registro de movimientos extraordinarios y documentos testimoniales mediante una macro de organización de información.': 'At INE, I partially automated the logging of extraordinary movements and testimonial documents using an information-organization macro.',
-    'Productividad': 'Productivity', 'Control de calidad de extremo a extremo': 'End-to-end quality control',
-    'Como Supervisor de Calidad lideré un equipo de 9 personas, dando seguimiento desde Incoming y proceso hasta la liberación para embarque.': 'As Quality Supervisor, I led a 9-person team from incoming inspection and production through shipment release.',
-    '9 personas': '9 people', 'Rendimiento sostenido en un cuello de botella': 'Sustained performance at a bottleneck station',
-    'Trabajé en una estación crítica de producción cuyo turno se mantuvo durante seis meses en primer lugar de cumplimiento de objetivos diarios.': 'I worked at a critical production station whose shift remained first in daily target attainment for six months.',
-    'Mejora': 'Improvement',
-    'FORMACIÓN Y DESARROLLO': 'EDUCATION & DEVELOPMENT', 'Base académica sólida y aprendizaje técnico continuo.': 'A solid academic foundation and continuous technical learning.',
-    'FORMACIÓN ACADÉMICA': 'ACADEMIC EDUCATION', 'Ingeniería en Sistemas Computacionales': 'Computer Systems Engineering',
-    'Bachillerato:': 'High school:', 'Idiomas:': 'Languages:',
-    'Español nativo · Inglés con conversación básica-intermedia, comprensión auditiva intermedia y escritura intermedia-avanzada.': 'Native Spanish · English with basic-intermediate conversation, intermediate listening comprehension and intermediate-advanced writing.',
-    'CERTIFICACIONES Y CURSOS': 'CERTIFICATIONS & COURSES', 'Excel TOTAL en 30 días — De Cero a Avanzado': 'Excel TOTAL in 30 Days — Beginner to Advanced',
-    'Cisco CCNA — Fundamentos de Networking para Redes IP': 'Cisco CCNA — Networking Fundamentals for IP Networks',
-    'Formación técnica': 'Technical training', 'Linux · Hyper-V · Bases de Datos · Cableado Estructurado · Calidad': 'Linux · Hyper-V · Databases · Structured Cabling · Quality',
-    'GITHUB & PROYECTOS': 'GITHUB & PROJECTS', 'Repositorios que demuestran trabajo real, práctica constante y presencia técnica en línea.': 'Repositories that demonstrate real work, continuous practice and an active technical presence online.',
-    'Una selección de repositorios públicos de mi perfil de GitHub, orientados a sitios web, presencia digital y proyectos propios.': 'A selection of public repositories from my GitHub profile, focused on websites, digital presence and personal projects.',
-    'Abrir ↗': 'Open ↗',
-    'Proyecto web educativo para reforzar el aprendizaje de inglés mediante una experiencia digital clara y accesible.': 'Educational web project designed to support English learning through a clear, accessible digital experience.',
-    'Sitio web construido con Astro, enfocado en rendimiento y una arquitectura web ligera.': 'Astro-built website focused on performance and a lightweight web architecture.',
-    'Sitio corporativo para servicios de presencia digital, desarrollo web y marketing para negocios.': 'Corporate site for digital presence, web development and marketing services for businesses.',
-    'Emprendimiento': 'Small business',
-    'Landing comercial para una marca de manualidades, orientada a presentar productos y fortalecer su presencia digital.': 'Commercial landing page for a crafts brand, designed to showcase products and strengthen its digital presence.',
-    'Sitio demo para un emprendimiento de eventos, diseñado para presentar servicios de forma visual y atractiva.': 'Demo site for an events business, designed to present services in a visual and engaging way.', 'Diseño web': 'Web design',
-    'Sitio corporativo para soluciones de CCTV y seguridad electrónica, enfocado en servicios, proyectos y confianza de marca.': 'Corporate site for CCTV and electronic security solutions, focused on services, projects and brand trust.', 'Seguridad': 'Security', 'Negocio': 'Business',
-    'MESES': 'MONTHS',
-    'PERFIL GITHUB': 'GITHUB PROFILE', 'Explora más proyectos, actividad y código en mi perfil completo.': 'Explore more projects, activity and code on my full profile.',
-    'Ver github.com/samuelinmex': 'View github.com/samuelinmex', 'CONTACTO': 'CONTACT',
-    '¿Buscas a alguien que pueda entrar a la operación, entenderla y resolver?': 'Looking for someone who can step into the operation, understand it and solve problems?',
-    'Estoy orientado a posiciones de soporte técnico N1/N2, infraestructura TI, administración de sistemas, redes, calidad, mejora de procesos y supervisión.': 'I am focused on L1/L2 technical support, IT infrastructure, systems administration, networking, quality, process improvement and supervisory roles.',
-    'Enviar correo': 'Send email', 'Copiar correo': 'Copy email', 'Ver GitHub': 'View GitHub', '· Portafolio profesional': '· Professional portfolio', 'Volver arriba ↑': 'Back to top ↑',
-    'Tema': 'Theme', 'APARIENCIA': 'APPEARANCE', 'Selecciona un tema': 'Choose a theme', 'Cobalto': 'Cobalt', 'Oscuro corporativo': 'Corporate dark',
-    'Grafito': 'Graphite', 'Neutral tecnológico': 'Technology neutral', 'Papel': 'Paper', 'Claro profesional': 'Professional light'
+  const root = document.documentElement;
+  const mediaMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const mediaPointer = window.matchMedia('(any-hover: hover) and (any-pointer: fine)');
+  const mobileBreakpoint = window.matchMedia('(max-width: 800px)');
+  const storageKey = 'sm-portfolio-preferences';
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(storageKey) || '{}') || {}; } catch (_) { /* Storage can be unavailable in private browsing. */ }
+  const urlLanguage = new URLSearchParams(window.location.search).get('lang');
+  const preferences = {
+    theme: ['graphite', 'light', 'contrast'].includes(saved.theme) ? saved.theme : 'graphite',
+    motion: typeof saved.motion === 'boolean' ? saved.motion : null,
+    cursor: saved.cursor !== false,
+    fontSize: [100, 112, 125].includes(saved.fontSize) ? saved.fontSize : 100,
+    language: ['es', 'en'].includes(urlLanguage) ? urlLanguage : (saved.language === 'en' ? 'en' : 'es')
   };
 
-  const ARIA_EN = {
-    'Navegación principal': 'Main navigation', 'Ir al inicio': 'Go to top', 'Abrir menú': 'Open menu',
-    'Preferencias del sitio': 'Site preferences', 'Elegir tema': 'Choose theme', 'Idioma': 'Language',
-    'Áreas de experiencia': 'Areas of expertise', 'Resumen profesional': 'Professional summary',
-    'Filtrar tecnologías': 'Filter technologies', 'Filtrar experiencia': 'Filter experience',
-    'Etapa anterior': 'Previous stage', 'Etapa siguiente': 'Next stage', 'Navegar por etapas': 'Navigate stages'
-  };
+  const motionToggle = document.querySelector('#motion-toggle');
+  const cursorToggle = document.querySelector('#cursor-toggle');
+  const fontSizeSelect = document.querySelector('#font-size');
+  const dialog = document.querySelector('#preferences');
+  const menuToggle = document.querySelector('#menu-toggle');
+  const mobileNav = document.querySelector('#mobile-nav');
+  const halo = document.querySelector('#cursor-halo');
+  const statusMessage = document.querySelector('#status-message');
+  const intro = document.querySelector('#cinematic-intro');
+  const introMotionToggle = document.querySelector('#intro-motion-toggle');
+  const introChoices = Array.from(document.querySelectorAll('[data-entry-lang]'));
+  const motionEnabled = () => preferences.motion === null ? !mediaMotion.matches : preferences.motion;
 
-  const dynamicText = (es, en) => currentLanguage === 'en' ? en : es;
-
-  const translateStaticPage = lang => {
-    currentLanguage = lang === 'en' ? 'en' : 'es';
-    doc.lang = currentLanguage;
-
-    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
-      acceptNode(node) {
-        const parent = node.parentElement;
-        if (!parent || ['SCRIPT', 'STYLE', 'NOSCRIPT'].includes(parent.tagName)) return NodeFilter.FILTER_REJECT;
-        return node.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
-      }
+  function storePreferences() {
+    try { localStorage.setItem(storageKey, JSON.stringify(preferences)); } catch (_) { /* Preferences still work for this visit. */ }
+  }
+  function updateMenuLabel() {
+    menuToggle.setAttribute('aria-label', translations[preferences.language][mobileNav.hidden ? 'openMenu' : 'closeMenu']);
+  }
+  function updateTextLayout() {
+    root.dataset.largeText = String(parseFloat(getComputedStyle(root).fontSize) > 17);
+    updateTabOrientation();
+  }
+  function applyPreferences() {
+    root.dataset.theme = preferences.theme;
+    root.dataset.motion = motionEnabled() ? 'full' : 'reduced';
+    root.dataset.cursor = preferences.cursor ? 'on' : 'off';
+    root.style.fontSize = `${preferences.fontSize}%`;
+    root.classList.toggle('js-motion', motionEnabled() && 'IntersectionObserver' in window);
+    if (!motionEnabled()) document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
+    document.querySelectorAll('input[name="theme"]').forEach(input => input.checked = input.value === preferences.theme);
+    motionToggle.checked = !motionEnabled();
+    introMotionToggle.checked = !motionEnabled();
+    cursorToggle.checked = preferences.cursor;
+    fontSizeSelect.value = String(preferences.fontSize);
+    document.querySelector('meta[name="theme-color"]').content = { graphite: '#10151c', light: '#f7f8fa', contrast: '#000000' }[preferences.theme];
+    if (!preferences.cursor) halo.classList.remove('active');
+    updateTextLayout();
+  }
+  function setLanguage(language, announce = true) {
+    if (!(language in translations)) return;
+    preferences.language = language;
+    const dictionary = translations[language];
+    root.lang = language;
+    document.title = dictionary.pageTitle;
+    document.querySelector('meta[name="description"]').content = dictionary.description;
+    document.querySelector('meta[property="og:title"]').content = dictionary.pageTitle;
+    document.querySelector('meta[property="og:description"]').content = dictionary.ogDescription;
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+      const value = dictionary[element.dataset.i18n];
+      if (value !== undefined) element.innerHTML = value;
     });
-
-    const nodes = [];
-    while (walker.nextNode()) nodes.push(walker.currentNode);
-    nodes.forEach(node => {
-      if (!originalTextNodes.has(node)) originalTextNodes.set(node, node.nodeValue);
-      const originalRaw = originalTextNodes.get(node);
-      const originalCore = originalRaw.trim();
-      const leading = originalRaw.match(/^\s*/)?.[0] || '';
-      const trailing = originalRaw.match(/\s*$/)?.[0] || '';
-      const translated = currentLanguage === 'en' ? (EN_TEXT[originalCore] || originalCore) : originalCore;
-      node.nodeValue = `${leading}${translated}${trailing}`;
-    });
-
-    document.querySelectorAll('[aria-label]').forEach(el => {
-      if (!originalAriaLabels.has(el)) originalAriaLabels.set(el, el.getAttribute('aria-label'));
-      const original = originalAriaLabels.get(el);
-      el.setAttribute('aria-label', currentLanguage === 'en' ? (ARIA_EN[original] || original) : original);
-    });
-
-    document.title = currentLanguage === 'en'
-      ? 'Samuel Mancilla | Computer Systems Engineer'
-      : 'Samuel Mancilla | Ingeniero en Sistemas Computacionales';
-    const description = document.querySelector('meta[name="description"]');
-    if (description) {
-      description.setAttribute('content', currentLanguage === 'en'
-        ? 'Professional portfolio of Samuel Mancilla, Computer Systems Engineer with experience in IT infrastructure, L1/L2 support, Microsoft 365, Linux, networking, automation, quality and operations.'
-        : 'Portafolio profesional de Samuel Eustorgio Mancilla Zunun, Ingeniero en Sistemas Computacionales con experiencia en infraestructura TI, soporte N1/N2, Microsoft 365, Linux, redes, automatización, calidad y operaciones.');
-    }
-  };
-
-  safely('theme controls', () => {
-    const trigger = document.getElementById('themeTrigger');
-    const menu = document.getElementById('themeMenu');
-    const switcher = document.getElementById('themeSwitcher');
-    const options = [...document.querySelectorAll('[data-theme-option]')];
-    const overlay = document.getElementById('themeTransitionOverlay');
-    const themeMeta = document.querySelector('meta[name="theme-color"]');
-    const allowed = ['cobalt', 'graphite', 'paper'];
-    const saved = storageGet('sm-theme');
-    let theme = allowed.includes(saved) ? saved : 'cobalt';
-
-    const themeColor = value => value === 'paper' ? '#F2F4F7' : value === 'graphite' ? '#101216' : '#0B1220';
-    const themeAccent = value => value === 'paper' ? '#1D4ED8' : value === 'graphite' ? '#94A3B8' : '#2563EB';
-    const sync = value => {
-      doc.dataset.theme = value;
-      if (themeMeta) themeMeta.setAttribute('content', themeColor(value));
-      options.forEach(option => {
-        const active = option.dataset.themeOption === value;
-        option.classList.toggle('is-active', active);
-        option.setAttribute('aria-checked', active ? 'true' : 'false');
-      });
-    };
-    sync(theme);
-
-    const setOpen = open => {
-      if (!trigger || !menu) return;
-      trigger.setAttribute('aria-expanded', String(open));
-      menu.classList.toggle('is-open', open);
-      menu.setAttribute('aria-hidden', open ? 'false' : 'true');
-    };
-
-    trigger?.addEventListener('click', event => {
-      trigger.classList.remove('is-clicked');
-      void trigger.offsetWidth;
-      trigger.classList.add('is-clicked');
-      window.setTimeout(() => trigger.classList.remove('is-clicked'), 520);
-      setOpen(trigger.getAttribute('aria-expanded') !== 'true');
-      event.stopPropagation();
-    });
-
-    options.forEach(option => option.addEventListener('click', () => {
-      const nextTheme = option.dataset.themeOption;
-      if (!allowed.includes(nextTheme) || nextTheme === theme) {
-        setOpen(false);
-        return;
-      }
-
-      const applyTheme = () => {
-        doc.classList.add('theme-changing');
-        theme = nextTheme;
-        storageSet('sm-theme', theme);
-        sync(theme);
-        window.dispatchEvent(new CustomEvent('portfolio:themechange', { detail: { theme } }));
-        window.setTimeout(() => doc.classList.remove('theme-changing'), prefersReducedMotion ? 0 : 760);
-      };
-
-      if (!prefersReducedMotion && overlay) {
-        const rect = option.getBoundingClientRect();
-        doc.style.setProperty('--theme-origin-x', `${rect.left + rect.width / 2}px`);
-        doc.style.setProperty('--theme-origin-y', `${rect.top + rect.height / 2}px`);
-        doc.style.setProperty('--theme-transition-bg', themeColor(nextTheme));
-        doc.style.setProperty('--theme-transition-accent', themeAccent(nextTheme));
-        overlay.classList.remove('is-animating');
-        void overlay.offsetWidth;
-        overlay.classList.add('is-animating');
-        window.setTimeout(applyTheme, 220);
-        window.setTimeout(() => overlay.classList.remove('is-animating'), 980);
-      } else {
-        applyTheme();
-      }
-
-      setOpen(false);
-    }));
-
-    document.addEventListener('click', event => {
-      if (switcher && !switcher.contains(event.target)) setOpen(false);
-    });
-    document.addEventListener('keydown', event => {
-      if (event.key === 'Escape') setOpen(false);
-    });
-  });
-
-  safely('language controls', () => {
-    const switcher = document.getElementById('languageSwitcher');
-    const buttons = [...document.querySelectorAll('[data-lang]')];
-    if (!switcher || !buttons.length) return;
-
-    const syncControls = lang => {
-      switcher.dataset.activeLang = lang;
-      buttons.forEach(button => {
-        const active = button.dataset.lang === lang;
-        button.classList.toggle('is-active', active);
-        button.setAttribute('aria-pressed', active ? 'true' : 'false');
-      });
-    };
-
-    const applyLanguage = lang => {
-      translateStaticPage(lang);
-      storageSet('sm-language', currentLanguage);
-      syncControls(currentLanguage);
-      window.dispatchEvent(new CustomEvent('portfolio:languagechange', { detail: { lang: currentLanguage } }));
-    };
-
-    applyLanguage(currentLanguage);
-
-    buttons.forEach(button => button.addEventListener('click', () => {
-      const next = button.dataset.lang === 'en' ? 'en' : 'es';
-      if (next === currentLanguage) return;
-      button.classList.remove('is-clicked');
-      void button.offsetWidth;
-      button.classList.add('is-clicked');
-      doc.classList.add('language-switching');
-      window.setTimeout(() => {
-        applyLanguage(next);
-        doc.classList.remove('language-switching');
-      }, prefersReducedMotion ? 0 : 135);
-      window.setTimeout(() => button.classList.remove('is-clicked'), 460);
-    }));
-  });
-
-  safely('year', () => {
-    const year = document.getElementById('year');
-    if (year) year.textContent = new Date().getFullYear();
-  });
-
-  safely('navigation', () => {
-    const navToggle = document.querySelector('.nav-toggle');
-    const navMenu = document.getElementById('navMenu');
-    if (!navToggle || !navMenu) return;
-
-    const closeMenu = () => {
-      navMenu.classList.remove('open');
-      navToggle.setAttribute('aria-expanded', 'false');
-      body.classList.remove('menu-open');
-    };
-
-    navToggle.addEventListener('click', () => {
-      const open = !navMenu.classList.contains('open');
-      navMenu.classList.toggle('open', open);
-      navToggle.setAttribute('aria-expanded', String(open));
-      body.classList.toggle('menu-open', open);
-    });
-
-    navMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
-    window.addEventListener('resize', () => {
-      if (window.innerWidth > 820) closeMenu();
-    }, { passive: true });
-  });
-
-  safely('reveal observer', () => {
-    const revealItems = [...document.querySelectorAll('.reveal')];
-    if (!('IntersectionObserver' in window)) {
-      revealItems.forEach(el => el.classList.add('visible'));
-      return;
-    }
-
-    const observer = new IntersectionObserver((entries, instance) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          instance.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.10, rootMargin: '0px 0px -4% 0px' });
-
-    revealItems.forEach(el => observer.observe(el));
-  });
-
-  safely('role rotator', () => {
-    const roleRotator = document.getElementById('roleRotator');
-    if (!roleRotator || prefersReducedMotion) return;
-
-    const roleSets = {
-      es: ['Infraestructura TI', 'Soporte N1 / N2', 'Microsoft 365', 'Linux & Windows Server', 'Redes y conectividad', 'Automatización de procesos'],
-      en: ['IT Infrastructure', 'L1 / L2 Support', 'Microsoft 365', 'Linux & Windows Server', 'Networking & Connectivity', 'Process Automation']
-    };
-    let roleIndex = 0;
-    const renderRole = () => {
-      const roles = roleSets[currentLanguage] || roleSets.es;
-      roleRotator.textContent = roles[roleIndex % roles.length];
-    };
-    renderRole();
-    window.addEventListener('portfolio:languagechange', renderRole);
-
-    window.setInterval(() => {
-      roleRotator.classList.add('is-changing');
-      window.setTimeout(() => {
-        const roles = roleSets[currentLanguage] || roleSets.es;
-        roleIndex = (roleIndex + 1) % roles.length;
-        roleRotator.textContent = roles[roleIndex];
-        roleRotator.classList.remove('is-changing');
-      }, 220);
-    }, 2600);
-  });
-
-  safely('scroll UI', () => {
-    const progressBar = document.getElementById('scrollProgress');
-    const roadmap = document.getElementById('skillsRoadmap');
-    const roadProgress = document.getElementById('roadProgress');
-    const skillNodes = [...document.querySelectorAll('.skill-node')];
-    const sections = [...document.querySelectorAll('main section[id]')];
-    const navLinks = [...document.querySelectorAll('.nav-menu a[href^="#"]')];
-
-    const update = () => {
-      const max = Math.max(1, doc.scrollHeight - window.innerHeight);
-      const pct = Math.min(100, Math.max(0, (window.scrollY / max) * 100));
-      if (progressBar) progressBar.style.width = `${pct}%`;
-
-      if (roadmap && roadProgress) {
-        const rect = roadmap.getBoundingClientRect();
-        const viewportAnchor = window.innerHeight * 0.62;
-        const total = rect.height + window.innerHeight * 0.18;
-        const passed = viewportAnchor - rect.top;
-        const roadPct = Math.min(100, Math.max(0, (passed / total) * 100));
-        roadProgress.style.height = `${roadPct}%`;
-
-        if (skillNodes.length) {
-          const focusY = window.innerHeight * 0.50;
-          let closest = null;
-          let closestDistance = Infinity;
-          skillNodes.forEach(node => {
-            const nodeRect = node.getBoundingClientRect();
-            const center = nodeRect.top + nodeRect.height / 2;
-            const distance = Math.abs(center - focusY);
-            if (distance < closestDistance) {
-              closestDistance = distance;
-              closest = node;
-            }
-          });
-          skillNodes.forEach(node => {
-            node.classList.toggle('is-active', node === closest && rect.top < window.innerHeight && rect.bottom > 0);
-          });
-        }
-      }
-
-      const y = window.scrollY + 150;
-      let activeId = sections[0]?.id;
-      sections.forEach(section => {
-        if (section.offsetTop <= y) activeId = section.id;
-      });
-      navLinks.forEach(link => {
-        link.classList.toggle('active', link.getAttribute('href') === `#${activeId}`);
-      });
-    };
-
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update, { passive: true });
-    update();
-  });
-
-  safely('pointer glow', () => {
-    if (!window.matchMedia('(hover: hover)').matches) return;
-    window.addEventListener('pointermove', event => {
-      doc.style.setProperty('--pointer-x', `${event.clientX}px`);
-      doc.style.setProperty('--pointer-y', `${event.clientY}px`);
-    }, { passive: true });
-  });
-
-  safely('impact carousel', () => {
-    const carousel = document.getElementById('impactCarousel');
-    if (!carousel) return;
-
-    const slides = [...carousel.querySelectorAll('[data-impact-slide]')];
-    const dots = [...carousel.querySelectorAll('[data-impact-go]')];
-    const prev = carousel.querySelector('[data-impact-prev]');
-    const next = carousel.querySelector('[data-impact-next]');
-    const progress = document.getElementById('impactProgress');
-    const mobileIndex = document.getElementById('impactMobileIndex');
-    const mobileLabel = document.getElementById('impactMobileLabel');
-    if (!slides.length) return;
-
-    let current = 0;
-    let timer = null;
-    let paused = false;
-    let visible = true;
-    let touchStartX = 0;
-    const delay = 7000;
-    const stage = carousel.querySelector('.impact-stage');
-
-    const syncMobileStatus = () => {
-      const dot = dots[current];
-      if (!dot) return;
-      if (mobileIndex) mobileIndex.textContent = dot.querySelector('span')?.textContent?.trim() || String(current + 1).padStart(2, '0');
-      if (mobileLabel) mobileLabel.textContent = dot.querySelector('small')?.textContent?.trim() || '';
-    };
-
-    const syncStageHeight = () => {
-      if (!stage || !slides.length) return;
-
-      window.requestAnimationFrame(() => {
-        const isCompact = window.matchMedia('(max-width: 820px)').matches;
-
-        if (isCompact) {
-          // Measure every compact/mobile slide at the real carousel width, even
-          // though inactive slides are display:none. One maximum height is then
-          // applied to the stage so arrows/progress never jump between items.
-          stage.style.removeProperty('height');
-          slides.forEach(slide => slide.classList.add('is-measuring'));
-
-          window.requestAnimationFrame(() => {
-            const needed = slides.reduce((maxHeight, slide) => {
-              const height = Math.max(slide.scrollHeight, slide.getBoundingClientRect().height);
-              return Math.max(maxHeight, height);
-            }, 0);
-
-            slides.forEach(slide => slide.classList.remove('is-measuring'));
-            if (needed > 0) stage.style.height = `${Math.ceil(needed + 2)}px`;
-          });
-          return;
-        }
-
-        // Desktop also uses the tallest slide so the carousel remains uniform.
-        const needed = slides.reduce((maxHeight, slide) => {
-          const height = Math.max(slide.scrollHeight, slide.getBoundingClientRect().height);
-          return Math.max(maxHeight, height);
-        }, 0);
-        if (needed > 0) stage.style.height = `${Math.ceil(needed)}px`;
-      });
-    };
-
-    const resetProgress = () => {
-      if (!progress || prefersReducedMotion) return;
-      carousel.classList.remove('is-running');
-      void progress.offsetWidth;
-      carousel.classList.add('is-running');
-    };
-
-    const clearTimer = () => {
-      if (timer) {
-        window.clearTimeout(timer);
-        timer = null;
-      }
-    };
-
-    const schedule = () => {
-      clearTimer();
-      if (prefersReducedMotion || paused || !visible) return;
-      resetProgress();
-      timer = window.setTimeout(() => goTo(current + 1, true), delay);
-    };
-
-    const goTo = (index, fromAuto = false) => {
-      const nextIndex = (index + slides.length) % slides.length;
-      if (nextIndex === current && !fromAuto) {
-        schedule();
-        return;
-      }
-
-      slides.forEach((slide, i) => {
-        const active = i === nextIndex;
-        slide.classList.toggle('is-active', active);
-        slide.setAttribute('aria-hidden', active ? 'false' : 'true');
-      });
-
-      dots.forEach((dot, i) => {
-        const active = i === nextIndex;
-        dot.classList.toggle('is-active', active);
-        dot.setAttribute('aria-selected', active ? 'true' : 'false');
-        dot.tabIndex = active ? 0 : -1;
-      });
-
-      current = nextIndex;
-      syncMobileStatus();
-      syncStageHeight();
-      schedule();
-    };
-
-    prev?.addEventListener('click', () => goTo(current - 1));
-    next?.addEventListener('click', () => goTo(current + 1));
-    dots.forEach(dot => dot.addEventListener('click', () => goTo(Number(dot.dataset.impactGo))));
-
-    carousel.addEventListener('keydown', event => {
-      if (event.key === 'ArrowLeft') {
-        event.preventDefault();
-        goTo(current - 1);
-      } else if (event.key === 'ArrowRight') {
-        event.preventDefault();
-        goTo(current + 1);
-      }
-    });
-
-    carousel.addEventListener('pointerenter', () => {
-      paused = true;
-      clearTimer();
-      carousel.classList.remove('is-running');
-    });
-    carousel.addEventListener('pointerleave', () => {
-      paused = false;
-      schedule();
-    });
-    carousel.addEventListener('focusin', () => {
-      paused = true;
-      clearTimer();
-      carousel.classList.remove('is-running');
-    });
-    carousel.addEventListener('focusout', event => {
-      if (!carousel.contains(event.relatedTarget)) {
-        paused = false;
-        schedule();
-      }
-    });
-
-    carousel.addEventListener('touchstart', event => {
-      touchStartX = event.changedTouches[0]?.clientX || 0;
-    }, { passive: true });
-    carousel.addEventListener('touchend', event => {
-      const endX = event.changedTouches[0]?.clientX || 0;
-      const delta = endX - touchStartX;
-      if (Math.abs(delta) > 48) goTo(current + (delta < 0 ? 1 : -1));
-    }, { passive: true });
-
-    if ('IntersectionObserver' in window) {
-      const observer = new IntersectionObserver(entries => {
-        visible = entries.some(entry => entry.isIntersecting);
-        if (visible) schedule();
-        else {
-          clearTimer();
-          carousel.classList.remove('is-running');
-        }
-      }, { threshold: 0.28 });
-      observer.observe(carousel);
-    }
-
-    dots.forEach((dot, i) => { dot.tabIndex = i === 0 ? 0 : -1; });
-
-    const handleLayoutChange = () => window.setTimeout(syncStageHeight, 40);
-    window.addEventListener('resize', handleLayoutChange, { passive: true });
-    window.addEventListener('portfolio:themechange', handleLayoutChange);
-    window.addEventListener('portfolio:languagechange', () => {
-      syncMobileStatus();
-      handleLayoutChange();
-    });
-    syncMobileStatus();
-    syncStageHeight();
-    if (document.fonts?.ready) document.fonts.ready.then(syncStageHeight).catch(() => {});
-    schedule();
-  });
-
-  safely('interactive skills timeline', () => {
-    const roadmap = document.getElementById('skillsRoadmap');
-    const nodes = [...document.querySelectorAll('.skill-node')];
-    const indexButtons = [...document.querySelectorAll('[data-timeline-go]')];
-    const prev = document.querySelector('[data-timeline-prev]');
-    const next = document.querySelector('[data-timeline-next]');
-    const activeTitle = document.getElementById('timelineActiveTitle');
-    const activeMeta = document.getElementById('timelineActiveMeta');
-    const consoleProgress = document.getElementById('timelineConsoleProgress');
-    if (!roadmap || !nodes.length) return;
-
-    let current = 0;
-    let scrollTicking = false;
-    let scrollLockUntil = 0;
-
-    const activate = (index, shouldScroll = false) => {
-      current = (index + nodes.length) % nodes.length;
-      nodes.forEach((node, i) => node.classList.toggle('is-selected', i === current));
-      indexButtons.forEach((button, i) => {
-        const active = i === current;
-        button.classList.toggle('is-active', active);
-        button.setAttribute('aria-selected', active ? 'true' : 'false');
-        button.tabIndex = active ? 0 : -1;
-      });
-
-      const node = nodes[current];
-      const title = node.querySelector('h3')?.textContent?.trim() || '';
-      const kicker = node.querySelector('.node-kicker')?.textContent?.trim() || '';
-      if (activeTitle) activeTitle.textContent = title;
-      if (activeMeta) activeMeta.textContent = `${String(current + 1).padStart(2, '0')} · ${kicker}`;
-      if (consoleProgress) consoleProgress.style.width = `${((current + 1) / nodes.length) * 100}%`;
-
-      if (shouldScroll) {
-        scrollLockUntil = performance.now() + 1050;
-        node.scrollIntoView({
-          behavior: prefersReducedMotion ? 'auto' : 'smooth',
-          block: 'center'
-        });
-      }
-    };
-
-    const closestToViewport = () => {
-      if (performance.now() < scrollLockUntil) return;
-      const roadmapRect = roadmap.getBoundingClientRect();
-      if (roadmapRect.bottom < 0 || roadmapRect.top > window.innerHeight) return;
-      const focusY = Math.min(window.innerHeight * .58, window.innerHeight - 120);
-      let closestIndex = current;
-      let distance = Infinity;
-      nodes.forEach((node, index) => {
-        const rect = node.getBoundingClientRect();
-        const center = rect.top + rect.height / 2;
-        const candidate = Math.abs(center - focusY);
-        if (candidate < distance) {
-          distance = candidate;
-          closestIndex = index;
-        }
-      });
-      if (closestIndex !== current) activate(closestIndex, false);
-    };
-
-    nodes.forEach((node, index) => {
-      node.setAttribute('role', 'button');
-      node.setAttribute('aria-label', `${String(index + 1).padStart(2, '0')} · ${node.querySelector('h3')?.textContent?.trim() || ''}`);
-      node.addEventListener('click', () => activate(index, true));
-      node.addEventListener('keydown', event => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          activate(index, true);
-        } else if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
-          event.preventDefault();
-          activate(current + 1, true);
-        } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
-          event.preventDefault();
-          activate(current - 1, true);
-        }
-      });
-
-      if (window.matchMedia('(hover: hover)').matches) {
-        const card = node.querySelector('.node-card');
-        node.addEventListener('pointermove', event => {
-          if (!card) return;
-          const rect = card.getBoundingClientRect();
-          const px = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
-          const py = Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height));
-          const tiltY = (px - .5) * 5.5;
-          const tiltX = (.5 - py) * 4.5;
-          card.style.setProperty('--tilt-x', `${tiltX.toFixed(2)}deg`);
-          card.style.setProperty('--tilt-y', `${tiltY.toFixed(2)}deg`);
-          card.style.setProperty('--card-glow-x', `${(px * 100).toFixed(1)}%`);
-          card.style.setProperty('--card-glow-y', `${(py * 100).toFixed(1)}%`);
-        }, { passive: true });
-        node.addEventListener('pointerleave', () => {
-          if (!card) return;
-          card.style.setProperty('--tilt-x', '0deg');
-          card.style.setProperty('--tilt-y', '0deg');
-          card.style.setProperty('--card-glow-x', '50%');
-          card.style.setProperty('--card-glow-y', '50%');
-        });
-      }
-    });
-
-    indexButtons.forEach(button => button.addEventListener('click', () => activate(Number(button.dataset.timelineGo), true)));
-    prev?.addEventListener('click', () => activate(current - 1, true));
-    next?.addEventListener('click', () => activate(current + 1, true));
-
-    roadmap.addEventListener('keydown', event => {
-      if (event.target !== roadmap) return;
-      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
-        event.preventDefault();
-        activate(current + 1, true);
-      } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
-        event.preventDefault();
-        activate(current - 1, true);
-      }
-    });
-
-    const onScroll = () => {
-      if (scrollTicking) return;
-      scrollTicking = true;
-      requestAnimationFrame(() => {
-        closestToViewport();
-        scrollTicking = false;
-      });
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
-    window.addEventListener('portfolio:languagechange', () => {
-      nodes.forEach((node, index) => {
-        node.setAttribute('aria-label', `${String(index + 1).padStart(2, '0')} · ${node.querySelector('h3')?.textContent?.trim() || ''}`);
-      });
-      window.setTimeout(() => activate(current, false), 0);
-    });
-
-    activate(0, false);
-  });
-
-  safely('stack filters', () => {
-    const buttons = [...document.querySelectorAll('[data-stack-filter]')];
-    const items = [...document.querySelectorAll('[data-stack]')];
-    buttons.forEach(button => {
-      button.addEventListener('click', () => {
-        const filter = button.dataset.stackFilter;
-        buttons.forEach(btn => btn.classList.toggle('active', btn === button));
-        items.forEach(item => {
-          const visible = filter === 'all' || item.dataset.stack === filter;
-          item.classList.toggle('is-hidden', !visible);
-        });
-      });
-    });
-  });
-
-  safely('career filters', () => {
-    const buttons = [...document.querySelectorAll('[data-career-filter]')];
-    const items = [...document.querySelectorAll('[data-career]')];
-    buttons.forEach(button => {
-      button.addEventListener('click', () => {
-        const filter = button.dataset.careerFilter;
-        buttons.forEach(btn => btn.classList.toggle('active', btn === button));
-        items.forEach(item => {
-          const categories = (item.dataset.career || '').split(/\s+/);
-          item.classList.toggle('is-hidden', filter !== 'all' && !categories.includes(filter));
-        });
-      });
-    });
-  });
-
-  safely('copy email', () => {
-    const copyButton = document.getElementById('copyEmail');
-    const copyStatus = document.getElementById('copyStatus');
-    if (!copyButton) return;
-
-    copyButton.addEventListener('click', async () => {
-      const email = copyButton.dataset.email || '';
-      let copied = false;
-
-      if (navigator.clipboard && window.isSecureContext) {
-        try {
-          await navigator.clipboard.writeText(email);
-          copied = true;
-        } catch (_) {
-          copied = false;
-        }
-      }
-
-      if (!copied) {
-        const temp = document.createElement('textarea');
-        temp.value = email;
-        temp.setAttribute('readonly', '');
-        temp.style.position = 'fixed';
-        temp.style.opacity = '0';
-        document.body.appendChild(temp);
-        temp.select();
-        try {
-          copied = document.execCommand('copy');
-        } catch (_) {
-          copied = false;
-        }
-        temp.remove();
-      }
-
-      if (copyStatus) {
-        copyStatus.textContent = copied ? dynamicText('Correo copiado al portapapeles.', 'Email copied to clipboard.') : `${dynamicText('Correo', 'Email')}: ${email}`;
-        window.setTimeout(() => { copyStatus.textContent = ''; }, 2800);
-      }
-    });
-  });
-
-  safely('scroll to top', () => {
-    const button = document.getElementById('scrollToTop');
-    if (!button) return;
-    button.addEventListener('click', () => {
-      window.scrollTo({ top: 0, left: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
-    });
-  });
-
-  safely('smooth anchors', () => {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      const targetId = anchor.getAttribute('href');
-      if (!targetId || targetId === '#') return;
-      anchor.addEventListener('click', event => {
-        const target = document.querySelector(targetId);
-        if (!target) return;
-        event.preventDefault();
-        target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
-        if (history.replaceState) history.replaceState(null, '', targetId);
-      });
-    });
-  });
-
-  // Enhancement only: every functional control above is already registered before this runs.
-  safely('cinematic portrait', () => {
-    const lab = document.getElementById('portraitLab');
-    const canvas = document.getElementById('portraitCanvas');
-    const status = document.getElementById('heroDecodeStatus');
-    if (!lab || !canvas) return;
-
-    const setStatus = message => {
-      if (status) status.textContent = message;
-    };
-
-    if (prefersReducedMotion) {
-      lab.classList.add('is-materialized');
-      setStatus(dynamicText('Perfil materializado.', 'Profile materialized.'));
-      return;
-    }
-
-    const rect = lab.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.7);
-    const width = Math.max(280, Math.round(rect.width * dpr));
-    const height = Math.max(350, Math.round(rect.height * dpr));
-    canvas.width = width;
-    canvas.height = height;
-    canvas.style.pointerEvents = 'none';
-
-    const ctx = canvas.getContext('2d', { alpha: true });
-    if (!ctx) return;
-
-    const particles = [];
-    const streaks = [];
-    const cols = 44;
-    const rows = Math.round(cols * 1.24);
-    const cellW = width / cols;
-    const cellH = height / rows;
-
-    for (let gy = 0; gy < rows; gy += 1) {
-      for (let gx = 0; gx < cols; gx += 1) {
-        if (Math.random() > 0.54) continue;
-        const targetX = gx * cellW + cellW * 0.5;
-        const targetY = gy * cellH + cellH * 0.5;
-        const edge = Math.floor(Math.random() * 4);
-        let startX;
-        let startY;
-        if (edge === 0) { startX = Math.random() * width; startY = -height * (0.08 + Math.random() * 0.22); }
-        else if (edge === 1) { startX = width * (1.08 + Math.random() * 0.22); startY = Math.random() * height; }
-        else if (edge === 2) { startX = Math.random() * width; startY = height * (1.08 + Math.random() * 0.22); }
-        else { startX = -width * (0.08 + Math.random() * 0.22); startY = Math.random() * height; }
-
-        particles.push({
-          sx: startX,
-          sy: startY,
-          tx: targetX,
-          ty: targetY,
-          delay: Math.random() * 900,
-          duration: 1050 + Math.random() * 1250,
-          size: Math.max(1.1, Math.min(cellW, cellH) * (0.25 + Math.random() * 0.45)),
-          phase: Math.random() * Math.PI * 2,
-          bright: Math.random() > 0.83
-        });
-      }
-    }
-
-    for (let i = 0; i < 42; i += 1) {
-      const fromLeft = i % 2 === 0;
-      streaks.push({
-        sx: fromLeft ? -width * 0.15 : width * 1.15,
-        sy: Math.random() * height,
-        ex: width * (0.18 + Math.random() * 0.64),
-        ey: height * (0.08 + Math.random() * 0.84),
-        delay: Math.random() * 2100,
-        duration: 500 + Math.random() * 950,
-        alpha: 0.25 + Math.random() * 0.55,
-        width: 0.6 + Math.random() * 1.7
+    for (const [dataKey, attribute] of [['i18nAria', 'aria-label'], ['i18nAlt', 'alt'], ['i18nTitle', 'title']]) {
+      const selector = { i18nAria: '[data-i18n-aria]', i18nAlt: '[data-i18n-alt]', i18nTitle: '[data-i18n-title]' }[dataKey];
+      document.querySelectorAll(selector).forEach(element => {
+        if (dictionary[element.dataset[dataKey]] !== undefined) element.setAttribute(attribute, dictionary[element.dataset[dataKey]]);
       });
     }
+    document.querySelectorAll('[data-lang]').forEach(button => {
+      const active = button.dataset.lang === language;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    const filename = `Samuel-Mancilla-CV-${language.toUpperCase()}.pdf`;
+    document.querySelectorAll('.cv-download').forEach(link => {
+      link.href = `assets/cv/${filename}`;
+      link.download = filename;
+      link.setAttribute('hreflang', language);
+      link.setAttribute('type', 'application/pdf');
+    });
+    updateMenuLabel();
+    if (announce) statusMessage.textContent = dictionary.languageChanged;
+    storePreferences();
+  }
 
-    const start = performance.now();
-    const totalDuration = 4000;
-    const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
-    const easeOutQuad = t => 1 - (1 - t) * (1 - t);
+  document.querySelectorAll('[data-lang]').forEach(button => button.addEventListener('click', () => setLanguage(button.dataset.lang)));
+  document.querySelectorAll('input[name="theme"]').forEach(input => input.addEventListener('change', () => {
+    preferences.theme = input.value; applyPreferences(); storePreferences();
+  }));
+  motionToggle.addEventListener('change', () => { preferences.motion = !motionToggle.checked; applyPreferences(); storePreferences(); });
+  cursorToggle.addEventListener('change', () => { preferences.cursor = cursorToggle.checked; applyPreferences(); storePreferences(); });
+  fontSizeSelect.addEventListener('change', () => { preferences.fontSize = Number(fontSizeSelect.value); applyPreferences(); storePreferences(); });
+  document.querySelector('#reset-preferences').addEventListener('click', () => {
+    Object.assign(preferences, { theme: 'graphite', motion: null, cursor: true, fontSize: 100 });
+    applyPreferences(); storePreferences(); statusMessage.textContent = translations[preferences.language].preferencesReset;
+  });
+  mediaMotion.addEventListener('change', applyPreferences);
 
-    const frame = now => {
-      const elapsed = now - start;
-      const progress = Math.min(1, elapsed / totalDuration);
+  function closeMenu(restoreFocus = false) {
+    mobileNav.hidden = true; menuToggle.setAttribute('aria-expanded', 'false'); updateMenuLabel();
+    if (restoreFocus) menuToggle.focus();
+  }
+  menuToggle.addEventListener('click', () => {
+    mobileNav.hidden = !mobileNav.hidden;
+    menuToggle.setAttribute('aria-expanded', String(!mobileNav.hidden)); updateMenuLabel();
+  });
+  mobileNav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+    closeMenu();
+    const target = link.hash ? document.querySelector(link.hash) : null;
+    if (target) { target.setAttribute('tabindex', '-1'); target.focus({ preventScroll: true }); }
+  }));
+  document.addEventListener('click', event => { if (!mobileNav.hidden && !event.target.closest('.site-header')) closeMenu(); });
+  document.addEventListener('keydown', event => { if (event.key === 'Escape' && !mobileNav.hidden) closeMenu(true); });
+  mobileBreakpoint.addEventListener('change', () => { closeMenu(); updateTabOrientation(); });
+  document.querySelector('#preferences-open').addEventListener('click', () => {
+    closeMenu(); dialog.showModal(); dialog.append(halo); document.body.classList.add('dialog-open');
+  });
+  document.querySelector('.close-dialog').addEventListener('click', () => dialog.close());
+  dialog.addEventListener('close', () => { document.body.classList.remove('dialog-open'); document.body.append(halo); });
+  dialog.addEventListener('click', event => {
+    if (event.target !== dialog) return;
+    const rect = dialog.getBoundingClientRect();
+    if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
+  });
 
-      if (elapsed < 600) setStatus(dynamicText('Iniciando secuencia visual...', 'Starting visual sequence...'));
-      else if (elapsed < 1500) setStatus(dynamicText('Encendiendo destellos...', 'Igniting light traces...'));
-      else if (elapsed < 2700) setStatus(dynamicText('Bits convergiendo...', 'Bits converging...'));
-      else if (elapsed < totalDuration) setStatus(dynamicText('Revelando identidad...', 'Revealing identity...'));
-      else setStatus(dynamicText('Perfil materializado.', 'Profile materialized.'));
-
-      ctx.clearRect(0, 0, width, height);
-      ctx.save();
-      ctx.globalCompositeOperation = 'lighter';
-
-      // Moving cinematic flare.
-      const flareX = width * (-0.08 + progress * 1.16);
-      const flareY = height * (0.18 + 0.52 * progress);
-      const flare = ctx.createRadialGradient(flareX, flareY, 0, flareX, flareY, width * 0.18);
-      flare.addColorStop(0, 'rgba(255,255,255,0.72)');
-      flare.addColorStop(0.14, 'rgba(187,216,255,0.38)');
-      flare.addColorStop(0.42, 'rgba(37,99,235,0.12)');
-      flare.addColorStop(1, 'rgba(37,99,235,0)');
-      ctx.fillStyle = flare;
-      ctx.beginPath();
-      ctx.arc(flareX, flareY, width * 0.18, 0, Math.PI * 2);
-      ctx.fill();
-      lab.style.setProperty('--flare-x', `${(flareX / width) * 100}%`);
-      lab.style.setProperty('--flare-y', `${(flareY / height) * 100}%`);
-
-      // Light streaks crossing the frame.
-      streaks.forEach(streak => {
-        const raw = Math.min(1, Math.max(0, (elapsed - streak.delay) / streak.duration));
-        if (raw <= 0 || raw >= 1) return;
-        const t = easeOutQuad(raw);
-        const x = streak.sx + (streak.ex - streak.sx) * t;
-        const y = streak.sy + (streak.ey - streak.sy) * t;
-        const previous = Math.max(0, t - 0.09);
-        const px = streak.sx + (streak.ex - streak.sx) * previous;
-        const py = streak.sy + (streak.ey - streak.sy) * previous;
-        ctx.strokeStyle = `rgba(186,218,255,${Math.sin(raw * Math.PI) * streak.alpha})`;
-        ctx.lineWidth = streak.width;
-        ctx.beginPath();
-        ctx.moveTo(px, py);
-        ctx.lineTo(x, y);
-        ctx.stroke();
-      });
-
-      // Square bits converge into a digital portrait field, then dissolve to reveal the real photo.
-      particles.forEach(particle => {
-        const raw = Math.min(1, Math.max(0, (elapsed - particle.delay) / particle.duration));
-        if (raw <= 0) return;
-        const t = easeOutCubic(raw);
-        const inv = 1 - t;
-        const x = particle.sx + (particle.tx - particle.sx) * t + Math.sin(elapsed / 150 + particle.phase) * inv * 12;
-        const y = particle.sy + (particle.ty - particle.sy) * t + Math.cos(elapsed / 190 + particle.phase) * inv * 10;
-        const dissolve = progress > 0.72 ? Math.max(0, 1 - (progress - 0.72) / 0.28) : 1;
-        const alpha = Math.min(0.88, 0.18 + raw * 0.75) * dissolve;
-        const size = particle.size * (1.45 - raw * 0.35);
-        ctx.fillStyle = particle.bright
-          ? `rgba(242,247,255,${alpha})`
-          : `rgba(95,151,244,${alpha * 0.72})`;
-        ctx.fillRect(x - size / 2, y - size / 2, size, size);
-      });
-
-      ctx.restore();
-
-      if (elapsed < totalDuration) {
-        requestAnimationFrame(frame);
-      } else {
-        lab.classList.add('is-materialized');
-        canvas.style.opacity = '0';
-        setStatus(dynamicText('Perfil materializado.', 'Profile materialized.'));
-      }
-    };
-
-    requestAnimationFrame(frame);
-    window.setTimeout(() => {
-      lab.classList.add('is-materialized');
-      setStatus(dynamicText('Perfil materializado.', 'Profile materialized.'));
-    }, 4200);
-    window.addEventListener('portfolio:languagechange', () => {
-      if (lab.classList.contains('is-materialized')) setStatus(dynamicText('Perfil materializado.', 'Profile materialized.'));
+  const caseTabs = Array.from(document.querySelectorAll('.case-tab'));
+  function activateTab(tab, focus = false) {
+    caseTabs.forEach(candidate => {
+      const active = candidate === tab;
+      candidate.setAttribute('aria-selected', String(active)); candidate.tabIndex = active ? 0 : -1;
+      candidate.classList.toggle('selected', active);
+      const panel = document.getElementById(candidate.getAttribute('aria-controls'));
+      panel.hidden = !active; panel.classList.remove('panel-enter');
+      if (active && motionEnabled()) { void panel.offsetWidth; panel.classList.add('panel-enter'); }
+    });
+    if (focus) tab.focus();
+  }
+  function updateTabOrientation() {
+    document.querySelector('.case-selectors').setAttribute('aria-orientation', mobileBreakpoint.matches && root.dataset.largeText !== 'true' ? 'horizontal' : 'vertical');
+  }
+  caseTabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => activateTab(tab));
+    tab.addEventListener('keydown', event => {
+      const horizontal = document.querySelector('.case-selectors').getAttribute('aria-orientation') === 'horizontal';
+      const next = horizontal ? 'ArrowRight' : 'ArrowDown';
+      const previous = horizontal ? 'ArrowLeft' : 'ArrowUp';
+      let destination;
+      if (event.key === next) destination = (index + 1) % caseTabs.length;
+      else if (event.key === previous) destination = (index + caseTabs.length - 1) % caseTabs.length;
+      else if (event.key === 'Home') destination = 0;
+      else if (event.key === 'End') destination = caseTabs.length - 1;
+      else return;
+      event.preventDefault(); activateTab(caseTabs[destination], true);
     });
   });
+  updateTabOrientation();
+
+  applyPreferences();
+  setLanguage(preferences.language, false);
+  document.querySelector('#year').textContent = new Date().getFullYear();
+
+  let introLeaving = false;
+  let introClosed = false;
+  let introExitTimer;
+  function completeIntro() {
+    if (introClosed) return;
+    introClosed = true;
+    clearTimeout(introExitTimer);
+    if (intro.open) intro.close();
+    document.body.classList.remove('intro-open');
+    document.body.append(halo);
+    halo.classList.remove('active');
+    document.querySelector('.hero').classList.add('cinematic-arrival');
+    const fragment = window.location.hash || '';
+    let destination = document.querySelector('#hero-title');
+    try { destination = document.getElementById(decodeURIComponent(fragment.slice(1))) || destination; } catch (_) { /* Use the hero when a URL fragment is invalid. */ }
+    destination.setAttribute('tabindex', '-1');
+    destination.focus({ preventScroll: true });
+    statusMessage.textContent = translations[preferences.language].languageChanged;
+  }
+  function enterPortfolio(language = preferences.language, immediate = false) {
+    if (introClosed) return;
+    if (introLeaving) { if (immediate) completeIntro(); return; }
+    introLeaving = true;
+    setLanguage(language, false);
+    introChoices.forEach(button => {
+      button.disabled = true;
+      button.classList.toggle('chosen', button.dataset.entryLang === language);
+    });
+    if (immediate || !motionEnabled()) { completeIntro(); return; }
+    intro.classList.add('intro-leaving');
+    introExitTimer = setTimeout(completeIntro, 850);
+  }
+  introChoices.forEach(button => button.addEventListener('click', () => enterPortfolio(button.dataset.entryLang)));
+  document.querySelector('#intro-skip').addEventListener('click', () => enterPortfolio(preferences.language, true));
+  intro.addEventListener('cancel', event => { event.preventDefault(); enterPortfolio(preferences.language, true); });
+  intro.addEventListener('close', () => { if (!introClosed) completeIntro(); });
+  introMotionToggle.addEventListener('change', () => {
+    preferences.motion = !introMotionToggle.checked;
+    applyPreferences(); storePreferences();
+    if (introLeaving && !motionEnabled()) completeIntro();
+  });
+  if (typeof intro.showModal === 'function') {
+    document.body.classList.add('intro-open');
+    intro.showModal();
+    intro.append(halo);
+    const initialChoice = introChoices.find(button => button.dataset.entryLang === preferences.language);
+    if (initialChoice) initialChoice.focus({ preventScroll: true });
+  }
+
+  if ('IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add('visible'); revealObserver.unobserve(entry.target); }
+    }), { threshold: 0.07, rootMargin: '0px 0px -25px 0px' });
+    document.querySelectorAll('.reveal').forEach(element => revealObserver.observe(element));
+    const navigationLinks = Array.from(document.querySelectorAll('.desktop-nav a'));
+    const navObserver = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      navigationLinks.forEach(link => {
+        const active = link.hash === `#${entry.target.id}`;
+        link.classList.toggle('current', active);
+        if (active) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current');
+      });
+    }), { rootMargin: '-25% 0px -55% 0px', threshold: 0 });
+    navigationLinks.forEach(link => navObserver.observe(document.querySelector(link.hash)));
+  }
+
+  const progress = document.querySelector('.reading-progress');
+  let scrollScheduled = false;
+  function updateProgress() {
+    const available = root.scrollHeight - window.innerHeight;
+    progress.style.transform = `scaleX(${available > 0 ? Math.min(1, Math.max(0, window.scrollY / available)) : 0})`;
+    scrollScheduled = false;
+  }
+  window.addEventListener('scroll', () => { if (!scrollScheduled) { scrollScheduled = true; requestAnimationFrame(updateProgress); } }, { passive: true });
+  window.addEventListener('resize', () => { updateProgress(); updateTextLayout(); }, { passive: true });
+  updateProgress();
+
+  let cursorX = 0, cursorY = 0, targetX = 0, targetY = 0, cursorFrame = 0;
+  function cursorAllowed() { return mediaPointer.matches && preferences.cursor; }
+  function moveHalo() {
+    if (!cursorAllowed()) { cursorFrame = 0; halo.classList.remove('active'); return; }
+    if (!motionEnabled()) {
+      cursorX = targetX; cursorY = targetY;
+      halo.style.transform = `translate3d(${cursorX}px,${cursorY}px,0)`;
+      cursorFrame = 0; return;
+    }
+    cursorX += (targetX - cursorX) * .18; cursorY += (targetY - cursorY) * .18;
+    halo.style.transform = `translate3d(${cursorX}px,${cursorY}px,0)`;
+    if (Math.abs(targetX - cursorX) + Math.abs(targetY - cursorY) > .25) cursorFrame = requestAnimationFrame(moveHalo);
+    else cursorFrame = 0;
+  }
+  document.addEventListener('pointermove', event => {
+    if (!cursorAllowed() || event.pointerType !== 'mouse') { halo.classList.remove('active'); return; }
+    if (!halo.classList.contains('active')) { cursorX = event.clientX; cursorY = event.clientY; }
+    targetX = event.clientX; targetY = event.clientY;
+    halo.classList.add('active');
+    halo.classList.toggle('hovering', Boolean(event.target.closest('a,button,summary,input,select,label')));
+    if (!motionEnabled()) {
+      cursorX = targetX; cursorY = targetY;
+      halo.style.transform = `translate3d(${cursorX}px,${cursorY}px,0)`;
+    } else if (!cursorFrame) cursorFrame = requestAnimationFrame(moveHalo);
+  }, { passive: true });
+  document.addEventListener('pointerleave', () => halo.classList.remove('active'));
+  window.addEventListener('blur', () => halo.classList.remove('active'));
+  mediaPointer.addEventListener('change', () => { if (!mediaPointer.matches) halo.classList.remove('active'); });
 })();

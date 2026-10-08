@@ -278,7 +278,20 @@
     "webCodeAria4": "Ver repositorio de Garritas Creativas, abre en otra pestaña",
     "webVisitAria4": "Visitar sitio de Garritas Creativas, abre en otra pestaña",
     "webCodeAria5": "Ver repositorio de Caribe Mid, abre en otra pestaña",
-    "webCodeAria6": "Ver repositorio de Carmina Moreno, abre en otra pestaña"
+    "webCodeAria6": "Ver repositorio de Carmina Moreno, abre en otra pestaña",
+    "projectMobileHint": "Abre un proyecto para conocer el resultado.",
+    "projectTechnicalDetails": "Ver cómo lo implementé",
+    "loanSummary": "Registros que continúan sin conexión.",
+    "infraSummary": "Servidor, inventario y acceso interno.",
+    "hrSummary": "Expedientes ordenados por persona.",
+    "bookingSummary": "La disponibilidad del equipo, en una agenda.",
+    "renewalsSummary": "Vencimientos visibles de licencias y dominios.",
+    "navHome": "Inicio",
+    "navCapabilities": "Capacidades",
+    "mobileSectionLabel": "Sección",
+    "mobileSectionSelect": "Ir a una sección del portafolio",
+    "mobileSectionNav": "Navegación por secciones",
+    "mobileProjectsIntro": "Soluciones internas y sitios web que he desarrollado. Abre cada proyecto para conocer su resultado y cómo lo implementé."
   },
   "en": {
     "pageTitle": "Samuel Mancilla — Technology with purpose",
@@ -556,7 +569,20 @@
     "webCodeAria4": "View Garritas Creativas repository, opens in a new tab",
     "webVisitAria4": "Visit Garritas Creativas website, opens in a new tab",
     "webCodeAria5": "View Caribe Mid repository, opens in a new tab",
-    "webCodeAria6": "View Carmina Moreno repository, opens in a new tab"
+    "webCodeAria6": "View Carmina Moreno repository, opens in a new tab",
+    "projectMobileHint": "Open a project to see the outcome.",
+    "projectTechnicalDetails": "See how I built it",
+    "loanSummary": "Records that continue offline.",
+    "infraSummary": "Server, inventory and internal access.",
+    "hrSummary": "Employee documents, organized by person.",
+    "bookingSummary": "Equipment availability in one calendar.",
+    "renewalsSummary": "License and domain expiry dates at a glance.",
+    "navHome": "Home",
+    "navCapabilities": "Skills",
+    "mobileSectionLabel": "Section",
+    "mobileSectionSelect": "Go to a portfolio section",
+    "mobileSectionNav": "Section navigation",
+    "mobileProjectsIntro": "Internal solutions and websites I have built. Open a project to explore the outcome and how I implemented it."
   }
 };
 
@@ -598,6 +624,7 @@
   function updateTextLayout() {
     root.dataset.largeText = String(parseFloat(getComputedStyle(root).fontSize) > 17);
     updateTabOrientation();
+    updateReadingGeometry();
   }
   function applyPreferences() {
     root.dataset.theme = preferences.theme;
@@ -679,7 +706,7 @@
   }));
   document.addEventListener('click', event => { if (!mobileNav.hidden && !event.target.closest('.site-header')) closeMenu(); });
   document.addEventListener('keydown', event => { if (event.key === 'Escape' && !mobileNav.hidden) closeMenu(true); });
-  mobileBreakpoint.addEventListener('change', () => { closeMenu(); updateTabOrientation(); });
+  mobileBreakpoint.addEventListener('change', () => { closeMenu(); updateProjectLayout(); updateMobileReadingLayout(); });
   document.querySelector('#preferences-open').addEventListener('click', () => {
     closeMenu(); dialog.showModal(); dialog.append(halo); document.body.classList.add('dialog-open');
   });
@@ -691,21 +718,140 @@
     if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
   });
 
+  const siteHeader = document.querySelector('.site-header');
+  const readingNav = document.getElementById('mobile-reading-nav');
+  const sectionSelect = document.getElementById('mobile-section-select');
+  const readingSections = ['inicio', 'impacto', 'perfil', 'capacidades', 'trayectoria', 'contacto'].map(id => document.getElementById(id));
+  const sectionTitles = {
+    impacto: 'impact-title', perfil: 'profile-title', capacidades: 'capabilities-title',
+    trayectoria: 'career-title', contacto: 'contact-title'
+  };
+  const readingDisclosures = [...document.querySelectorAll('.capability'), ...document.querySelectorAll('.career-entry')].map(element => ({
+    element, desktopOpen: element.open, mobileOpen: false,
+    group: element.classList.contains('capability') ? 'skills' : 'career'
+  }));
+  let readingLayoutIsMobile;
+  function updateReadingGeometry() {
+    if (!mobileBreakpoint.matches) return;
+    root.style.setProperty('--mobile-header-height', `${Math.ceil(siteHeader.getBoundingClientRect().height)}px`);
+    root.style.setProperty('--mobile-reading-nav-height', `${Math.ceil(readingNav.getBoundingClientRect().height)}px`);
+  }
+  function updateMobileSectionIndicator() {
+    if (!mobileBreakpoint.matches || document.activeElement === sectionSelect) return;
+    const readingLine = siteHeader.getBoundingClientRect().height + readingNav.getBoundingClientRect().height + 24;
+    let currentSection = readingSections[0];
+    readingSections.forEach(section => { if (section.getBoundingClientRect().top <= readingLine) currentSection = section; });
+    if (window.scrollY > 0 && root.scrollHeight - window.innerHeight - window.scrollY <= 2) currentSection = readingSections[readingSections.length - 1];
+    sectionSelect.value = currentSection.id;
+    mobileNav.querySelectorAll('a').forEach(link => {
+      if (link.getAttribute('href') === `#${currentSection.id}`) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+  }
+  function updateMobileReadingLayout() {
+    const mobile = mobileBreakpoint.matches;
+    if (readingLayoutIsMobile !== mobile) {
+      readingDisclosures.forEach(disclosure => {
+        if (readingLayoutIsMobile !== undefined) disclosure[readingLayoutIsMobile ? 'mobileOpen' : 'desktopOpen'] = disclosure.element.open;
+        if (mobile && disclosure.element.contains(document.activeElement)) disclosure.mobileOpen = true;
+        disclosure.element.open = disclosure[mobile ? 'mobileOpen' : 'desktopOpen'];
+      });
+      readingSections.slice(1).forEach(section => section.setAttribute('aria-labelledby', mobile ? `mobile-title-${section.id}` : sectionTitles[section.id]));
+      readingLayoutIsMobile = mobile;
+    }
+    updateReadingGeometry();
+    updateMobileSectionIndicator();
+  }
+  readingDisclosures.forEach(disclosure => disclosure.element.addEventListener('toggle', () => {
+    if (!mobileBreakpoint.matches || !disclosure.element.open) return;
+    readingDisclosures.forEach(other => { if (other !== disclosure && other.group === disclosure.group) other.element.open = false; });
+  }));
+  sectionSelect.addEventListener('change', () => {
+    const section = readingSections.find(candidate => candidate.id === sectionSelect.value);
+    if (!section) return;
+    closeMenu();
+    updateReadingGeometry();
+    section.setAttribute('tabindex', '-1');
+    section.focus({ preventScroll: true });
+    section.scrollIntoView({ behavior: motionEnabled() ? 'smooth' : 'auto', block: 'start' });
+  });
+  sectionSelect.addEventListener('blur', updateMobileSectionIndicator);
+  if ('ResizeObserver' in window) {
+    const readingGeometryObserver = new ResizeObserver(updateReadingGeometry);
+    readingGeometryObserver.observe(siteHeader);
+    readingGeometryObserver.observe(readingNav);
+  }
+
   const caseTabs = Array.from(document.querySelectorAll('.case-tab'));
+  const projectCards = caseTabs.map(tab => {
+    const id = tab.id.replace('tab-', '');
+    const panel = document.getElementById(`case-${id}`);
+    return {
+      tab,
+      panel,
+      card: document.getElementById(`project-${id}`),
+      summary: document.getElementById(`project-summary-${id}`),
+      technical: document.getElementById(`technical-${id}`),
+      technicalSummary: document.getElementById(`technical-summary-${id}`),
+      outcome: panel.querySelector('.case-outcome'),
+      tags: panel.querySelector('.tags'),
+      titleId: `project-title-${id}`
+    };
+  });
+  let projectLayoutIsMobile;
   function activateTab(tab, focus = false) {
     caseTabs.forEach(candidate => {
       const active = candidate === tab;
       candidate.setAttribute('aria-selected', String(active)); candidate.tabIndex = active ? 0 : -1;
       candidate.classList.toggle('selected', active);
       const panel = document.getElementById(candidate.getAttribute('aria-controls'));
-      panel.hidden = !active; panel.classList.remove('panel-enter');
-      if (active && motionEnabled()) { void panel.offsetWidth; panel.classList.add('panel-enter'); }
+      panel.hidden = !mobileBreakpoint.matches && !active; panel.classList.remove('panel-enter');
+      if (!mobileBreakpoint.matches && active && motionEnabled()) { void panel.offsetWidth; panel.classList.add('panel-enter'); }
     });
     if (focus) tab.focus();
   }
   function updateTabOrientation() {
-    document.querySelector('.case-selectors').setAttribute('aria-orientation', mobileBreakpoint.matches && root.dataset.largeText !== 'true' ? 'horizontal' : 'vertical');
+    document.querySelector('.case-selectors').setAttribute('aria-orientation', 'vertical');
   }
+  function updateProjectLayout() {
+    const mobile = mobileBreakpoint.matches;
+    if (projectLayoutIsMobile === mobile) return;
+    projectLayoutIsMobile = mobile;
+    const activeProject = projectCards.find(project => project.tab.getAttribute('aria-selected') === 'true') || projectCards[0];
+    const focusedElement = document.activeElement;
+    const focusInTabs = document.querySelector('.case-selectors').contains(focusedElement);
+    const focusInPanel = activeProject.panel.contains(focusedElement);
+    const focusInTechnical = activeProject.technical.contains(focusedElement);
+    const focusInSummary = activeProject.summary.contains(focusedElement);
+    const focusInTechnicalSummary = activeProject.technicalSummary.contains(focusedElement);
+    projectCards.forEach(project => {
+      // Keep the reading order consistent with the visible layout.
+      project.panel.insertBefore(project.outcome, mobile ? project.technical : project.tags);
+      project.card.open = !mobile || (project === activeProject && focusInPanel);
+      project.technical.open = !mobile || (project === activeProject && focusInTechnical);
+      project.panel.hidden = !mobile && project !== activeProject;
+      project.panel.classList.remove('panel-enter');
+      project.panel.setAttribute('aria-labelledby', mobile ? project.titleId : project.tab.id);
+      if (mobile) {
+        project.panel.removeAttribute('role');
+        project.panel.removeAttribute('tabindex');
+      } else {
+        project.panel.setAttribute('role', 'tabpanel');
+        project.panel.setAttribute('tabindex', '0');
+      }
+    });
+    updateTabOrientation();
+    if (mobile && focusInTabs) activeProject.summary.focus({ preventScroll: true });
+    if (!mobile && focusInSummary) activeProject.tab.focus({ preventScroll: true });
+    if (!mobile && focusInTechnicalSummary) activeProject.panel.focus({ preventScroll: true });
+  }
+  projectCards.forEach(project => project.card.addEventListener('toggle', () => {
+    if (!mobileBreakpoint.matches || !project.card.open) return;
+    projectCards.forEach(other => {
+      if (other !== project) { other.card.open = false; other.technical.open = false; }
+    });
+    activateTab(project.tab);
+  }));
   caseTabs.forEach((tab, index) => {
     tab.addEventListener('click', () => activateTab(tab));
     tab.addEventListener('keydown', event => {
@@ -722,7 +868,8 @@
     });
   });
   activateTab(caseTabs.find(tab => tab.getAttribute('aria-selected') === 'true') || caseTabs[0]);
-  updateTabOrientation();
+  updateProjectLayout();
+  updateMobileReadingLayout();
 
   applyPreferences();
   setLanguage(preferences.language, false);
@@ -799,6 +946,7 @@
   function updateProgress() {
     const available = root.scrollHeight - window.innerHeight;
     progress.style.transform = `scaleX(${available > 0 ? Math.min(1, Math.max(0, window.scrollY / available)) : 0})`;
+    updateMobileSectionIndicator();
     scrollScheduled = false;
   }
   window.addEventListener('scroll', () => { if (!scrollScheduled) { scrollScheduled = true; requestAnimationFrame(updateProgress); } }, { passive: true });

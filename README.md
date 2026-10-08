@@ -1,6 +1,8 @@
 # Samuel Mancilla · Portafolio profesional
 
-Sitio estático bilingüe, listo para GitHub Pages. HTML, CSS y JavaScript; sin compilación, dependencias de aplicación ni servicios externos para cargar fuentes o imágenes.
+Portafolio estático bilingüe de Samuel Mancilla, preparado para reemplazar el sitio de GitHub Pages en [smancilla.dev](https://smancilla.dev/). HTML, CSS y JavaScript; sin compilación, dependencias de aplicación ni servicios externos para cargar fuentes o imágenes.
+
+Repositorio: [samuelinmex/samuelinmex.github.io](https://github.com/samuelinmex/samuelinmex.github.io). Rama de publicación: `main`, carpeta raíz. El archivo `CNAME` conserva el dominio propio.
 
 ## Abrir el sitio
 
@@ -12,26 +14,26 @@ python3 -m http.server 8000
 
 Abre `http://localhost:8000`. El sitio también funciona dentro de una subcarpeta de GitHub Pages: todas las referencias locales son relativas.
 
-## Publicar en GitHub Pages
+## Actualizar el sitio
 
-1. Crea un repositorio en tu cuenta de GitHub, por ejemplo `samuel-portfolio`.
-2. Sube **el contenido de esta carpeta**: `index.html`, `styles.css`, `script.js`, `.nojekyll`, `assets` y los documentos de referencia. `index.html` debe quedar en la raíz del repositorio.
-3. En **Settings → Pages**, elige **Deploy from a branch**.
-4. Selecciona la rama **main** y la carpeta **/ (root)**; guarda.
-5. GitHub mostrará la dirección publicada cuando termine el despliegue.
-
-También puedes subirlo por Git desde esta carpeta, sustituyendo la URL por la del repositorio que hayas creado:
+Clona el repositorio existente y edita los archivos de su raíz:
 
 ```bash
-git init
-git add .
-git commit -m "Crear portafolio bilingüe de Samuel Mancilla"
-git branch -M main
-git remote add origin https://github.com/samuelinmex/samuel-portfolio.git
-git push -u origin main
+git clone https://github.com/samuelinmex/samuelinmex.github.io.git
+cd samuelinmex.github.io
 ```
 
-La URL del comando es un ejemplo; el repositorio todavía debe crearse. Para un dominio propio, configura el dominio en GitHub Pages y su DNS. El proyecto no incluye un dominio preconfigurado.
+Después de comprobar los cambios localmente:
+
+```bash
+git add .
+git commit -m "Actualizar portafolio"
+git push origin main
+```
+
+GitHub Pages publica la rama `main` desde `/ (root)`. Mantén `index.html`, `.nojekyll` y `CNAME` en la raíz. El estado del despliegue se consulta en la pestaña **Actions** del repositorio. La configuración del dominio y el DNS existentes se conservan.
+
+Al guardar el reemplazo como un nuevo commit, la versión anterior sigue disponible en el historial de Git.
 
 ## Funcionalidades
 
@@ -43,7 +45,10 @@ La URL del comando es un ejemplo; el repositorio todavía debe crearse. Para un 
 - Temas grafito, claro y alto contraste.
 - Control de movimiento, halo del cursor y tamaño de texto. Las preferencias se conservan únicamente en el navegador mediante `localStorage`.
 - Respeto inicial de `prefers-reduced-motion`; la elección posterior del visitante puede modificarlo.
-- Explorador de logros con pestañas accesibles: arriba/abajo en escritorio, izquierda/derecha en móvil, Inicio/Fin, Tab y Enter.
+- Proyectos como primera sección después del hero: cinco casos internos con necesidad, intervención, flujo y resultado. El caso destacado es la aplicación de préstamos y asignaciones en Visual Basic .NET con guardado local y sincronización al recuperar la conexión.
+- Casos de GLPI/OCS sobre Ubuntu Server y MySQL con DNS en Windows Server 2019, organización documental de RH con Python/Excel, reservas de equipo compartido con WordPress y dashboard de vencimientos en Excel.
+- Seis proyectos web enlazados a repositorios públicos: Conexión Metrópoli, Fortress, Oh Party!, Garritas Creativas, Caribe Mid y el portafolio de Carmina Moreno. Los dominios enlazados proceden de los archivos CNAME de sus repositorios; su disponibilidad en vivo no se pudo confirmar desde este entorno.
+- Explorador de proyectos con pestañas accesibles: arriba/abajo en escritorio, izquierda/derecha en móvil, Inicio/Fin y Tab. En móvil, el selector se desplaza horizontalmente; con texto ampliado se organiza en una lista vertical. Sin JavaScript, los cinco casos se muestran completos.
 - Capacidades y trayectoria desplegables, menú móvil y navegación con teclado.
 - Diálogo nativo de preferencias, con cierre por Escape y foco administrado por el navegador.
 - Cursor nativo conservado y halo más visible, con seguimiento suave y respuesta al pasar sobre controles. Funciona también en alto contraste y en equipos con ratón y pantalla táctil. En movimiento reducido, sigue la posición del ratón de forma inmediata y sin órbita animada. El halo se conserva sobre los diálogos y se oculta al usar entrada táctil.
@@ -61,9 +66,11 @@ La URL del comando es un ejemplo; el repositorio todavía debe crearse. Para un 
 - `assets/cv/Samuel-Mancilla-CV-EN.pdf`: résumé original en inglés.
 - `assets/fonts/`: fuentes locales, con licencia incluida.
 
-El contenido profesional utiliza los CV adjuntos como fuente. Los cargos y las fechas corresponden a esos documentos, incluyendo Concentradora Nueve hasta el 18 de septiembre de 2026. Tatung y Firstronic se presentan como puestos de calidad, de acuerdo con el CV actual. Las experiencias de 2022 se conservan con sus fechas originales aunque se superpongan con otras etapas. No se agregaron porcentajes de mejora ni métricas de TI no documentadas. Los diagramas representan áreas de contribución, no una arquitectura física de las empresas.
+La trayectoria utiliza los CV adjuntos como fuente. Los cargos y las fechas corresponden a esos documentos, incluyendo Concentradora Nueve hasta el 18 de septiembre de 2026. Tatung y Firstronic se presentan como puestos de calidad, de acuerdo con el CV actual. Las experiencias de 2022 se conservan con sus fechas originales aunque se superpongan con otras etapas.
 
-Proyectos añadidos al explorador de logros (sección Impacto), en español e inglés: despliegue de GLPI/OCS desde cero (Ubuntu Server, MySQL y DNS local en Windows Server 2019), aplicación en Visual Basic .NET para préstamos y asignaciones con modo sin conexión, aplicación en Python para organizar documentos de Recursos Humanos, reservas con WordPress y dashboard de vencimientos en Excel, y repositorios de GitHub. Estos casos no muestran empresa ni fechas porque no se indicaron; se describen únicamente las funciones aportadas, sin métricas.
+Los cinco casos internos se redactaron a partir de la descripción directa de Samuel. No se atribuyen a una empresa o fecha que no haya confirmado para cada proyecto. Los resultados son cualitativos: no se agregaron porcentajes, tiempos exactos, cantidades de usuarios ni métricas no documentadas. La aplicación de préstamos describe tolerancia a interrupciones mediante guardado local y movimientos pendientes; no se presenta como una garantía absoluta contra toda pérdida, duplicación o falla. Los flujos muestran etapas y componentes conceptuales, no una arquitectura física de las empresas ni una demostración de sus sistemas internos.
+
+Los proyectos web se verificaron mediante los repositorios públicos incluidos en la captura proporcionada y sus archivos fuente. Los enlaces no implican acceso a aplicaciones internas ni publican sus formatos, datos, URLs internas o información de empleados. Los CV descargables se mantienen como los originales adjuntos.
 
 Contacto del sitio: `contacto@smancilla.dev`, WhatsApp `+52 998 810 2135`, GitHub `samuelinmex`. El teléfono se tomó del CV adjunto. WhatsApp abre la conversación y el correo abre el cliente del visitante; el sitio no envía mensajes automáticamente.
 
@@ -75,7 +82,7 @@ La introducción muestra ambos idiomas en cada carga de la página. El idioma re
 
 El retrato, el texto profesional y los CV pertenecen al usuario. El paquete incluye fuentes URW bajo sus condiciones de licencia, sus archivos OTF originales y las versiones WOFF que utiliza el sitio. No se incluye seguimiento de visitantes.
 
-El paquete entregado es el proyecto completo. No se ha creado ni modificado un repositorio externo de GitHub.
+El repositorio contiene el proyecto completo, incluidas ambas fotografías, los dos CV y las fuentes locales con su licencia.
 
 ## Verificación realizada
 
